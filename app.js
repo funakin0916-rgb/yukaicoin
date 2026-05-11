@@ -109,7 +109,7 @@ const DICTIONARY = {
   // ========================================
   'turn_around': {
     priority: 100,
-    keywords: ['振り向', 'ふりむ', '振り返', 'ふりかえ', 'うしろ見', '後ろ見', '背後見', '後ろ向', '後方確認', '後ろ確認', '反対向', '反対側', 'うしろ向'],
+    keywords: ['振り向', 'ふりむ', '振り返', 'ふりかえ', 'うしろ見', '後ろ見', '背後見', '後ろ向', '後方確認', '後ろ確認', '反対向', '反対側', 'うしろ向', '後ろは', '後ろって', '後ろの方', 'うしろは', 'うしろって', 'うしろの', '後ろをみ', 'うしろをみ', '後ろをみて', '後ろは何', '後ろはなに', '後ろはどう', '後方'],
     response: 'turn_around',
   },
   'die_break_mirror': {
@@ -235,7 +235,7 @@ const DICTIONARY = {
   },
   'counter_terminal': {
     priority: 70,
-    keywords: ['決済端末', '端末', '決済機', 'カウンター上', 'カウンターの上', 'レジ', 'POS', 'カウンターの装置'],
+    keywords: ['決済端末', '端末', '決済機', 'カウンター上', 'カウンターの上', 'レジ', 'POS', 'カウンターの装置', '光ってる', '光ってる装置', '点滅', '画面ついて', '画面光', 'ピカピカ', 'パネル光', '液晶光', '液晶ついて'],
     response: 'counter_terminal',
   },
   'counter_under': {
@@ -277,7 +277,7 @@ const DICTIONARY = {
   // ========================================
   'photo': {
     priority: 60,
-    keywords: ['写真撮', '写真', '全景', '店内撮', '店内写真', '撮って', 'スマホで撮', '映して', 'うつして', '見せて', '映像', '送って', '画像送', '画像', '画像見', '映像見'],
+    keywords: ['写真撮', '写真', '全景', '店内撮', '店内写真', '撮って', 'スマホで撮', '映して', 'うつして', '見せて', '映像', '送って', '画像送', '画像', '画像見', '映像見', '前見', '前を見', '前撮', '前の方', '正面', 'まえ見', '前はどう', '前はなに', '前って', '前は何'],
     response: 'photo',
   },
   'selfie': {
@@ -316,22 +316,22 @@ const DICTIONARY = {
   // ========================================
   'look_up': {
     priority: 60,
-    keywords: ['上見', '上を見', '天井', 'てんじょう', '上の方', 'うえ見', '上方', '頭の上', '見上げ', '上撮', '上を撮', '空', '上方向'],
+    keywords: ['上見', '上を見', '天井', 'てんじょう', '上の方', 'うえ見', '上方', '頭の上', '見上げ', '上撮', '上を撮', '上はどう', '上はなに', '上には', '上の写真', '上をみ', '上って'],
     response: 'look_up',
   },
   'look_down': {
     priority: 60,
-    keywords: ['下見', '下を見', '床', 'ゆか', '下の方', 'した見', '足元', 'あしもと', '床面', '見下ろ', '床撮', '足下', '下方向', '下の床', '床の方'],
+    keywords: ['下見', '下を見', '床', 'ゆか', '下の方', 'した見', '足元', 'あしもと', '床面', '見下ろ', '床撮', '足下', '下の床', '床の方', '下はどう', '下はなに', '下には', '下の写真', '下をみ', '下って'],
     response: 'look_down',
   },
   'look_left': {
     priority: 60,
-    keywords: ['左見', '左を見', '左の方', 'ひだり', '左壁', '左側', '左方', '左確認', '左撮', '左をみ', '左に', 'left'],
+    keywords: ['左見', '左を見', '左の方', 'ひだり', '左壁', '左方', '左確認', '左撮', '左をみ', '左に', 'left', '左はどう', '左はなに', '左には', '左って'],
     response: 'look_left',
   },
   'look_right': {
     priority: 60,
-    keywords: ['右見', '右を見', '右の方', 'みぎ', '右壁', '右側', '右方', '右確認', '右撮', '右をみ', '右に', 'right', '洗濯機上', '洗濯機の上'],
+    keywords: ['右見', '右を見', '右の方', 'みぎ', '右壁', '右方', '右確認', '右撮', '右をみ', '右に', 'right', '右はどう', '右はなに', '右には', '右って'],
     response: 'look_right',
   },
   
@@ -1119,20 +1119,15 @@ const ACTIONS = {
   die_terminal_1: () => ({
     msgs: [
       { delay: 700, text: '1番、決済を押した' },
-      { delay: 2200, text: '……何か始まった' },
-      { delay: 2400, text: 'ピッ、ピッ、ピッ、ピッ', isGlitch: true },
-      { delay: 2400, text: '額に何か巻きつい──', isGlitch: true },
+      { delay: 2200, text: '「決済データがありません」' },
+      { delay: 2200, text: '何も起きない' },
     ],
-    triggerStage: 'end_bad_a',
   }),
   die_terminal_2: () => ({
     msgs: [
       { delay: 700, text: '2番、取消を押した' },
-      { delay: 2200, text: '画面が真っ赤になった' },
-      { delay: 2400, text: '取り消されるって、私が？' },
-      { delay: 2400, text: 'ｱ──', isGlitch: true },
+      { delay: 2200, text: '「データがありません」' },
     ],
-    triggerStage: 'end_bad_a',
   }),
   die_bgm_1: () => ({
     msgs: [
@@ -1184,7 +1179,19 @@ const ACTIONS = {
         triggerStage: 'end_bad_b',
       };
     }
-    // 第1幕では振り向いてカウンター発見
+    // crisis 4以上（パニック段階）= 怪異が後ろに張り付いてる、振り向くと即死
+    if (ctx.crisis >= 4) {
+      return {
+        msgs: [
+          { delay: 700, text: '振り向いた' },
+          { delay: 2200, text: 'すぐ後ろに', isGlitch: true },
+          { delay: 2400, text: 'ｲﾔ', isGlitch: true },
+          { delay: 2400, text: 'ｲﾔﾀﾞｲﾔﾀﾞ', isGlitch: true, isFading: true },
+        ],
+        triggerStage: 'end_bad_a',
+      };
+    }
+    // 第1幕（平穏時）では振り向いてカウンター発見
     return {
       msgs: [
         { delay: 700, text: '……振り向く' },
@@ -1495,6 +1502,7 @@ function YukaiLaundromat() {
       foldedMachines,
       tries,
       lastFocus,
+      crisis,
     };
     const result = action(ctx);
 
@@ -1514,7 +1522,7 @@ function YukaiLaundromat() {
       }, 1500);
     }
     setTries((t) => t + 1);
-  }, [loopCount, stage, flags, machineLayers, foldedMachines, tries, lastFocus, queueRei]);
+  }, [loopCount, stage, flags, machineLayers, foldedMachines, tries, lastFocus, crisis, queueRei]);
 
   // 辞書外のフォールバック応答（プログレス段階に応じて誘導）
   const getFallbackResponse = useCallback((ctx) => {
@@ -1562,7 +1570,7 @@ function YukaiLaundromat() {
     }
     
     const ctx = {
-      loopCount, stage, flags, machineLayers, foldedMachines, tries, lastFocus,
+      loopCount, stage, flags, machineLayers, foldedMachines, tries, lastFocus, crisis,
     };
     const actionId = matchInput(text, ctx);
     
@@ -1573,7 +1581,7 @@ function YukaiLaundromat() {
       const fallback = getFallbackResponse(ctx);
       queueRei(fallback);
     }
-  }, [inputText, isLocked, isEnded, loopCount, stage, flags, machineLayers, foldedMachines, tries, lastFocus, executeAction, getFallbackResponse, queueRei]);
+  }, [inputText, isLocked, isEnded, loopCount, stage, flags, machineLayers, foldedMachines, tries, lastFocus, crisis, executeAction, getFallbackResponse, queueRei]);
 
   // リセット
   const reset = useCallback(() => {
