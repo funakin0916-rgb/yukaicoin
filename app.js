@@ -680,35 +680,42 @@ const ACTIONS = {
   // 数字選択（文脈で何を選んでるか判定）
   // 即死扱いは「今まさにそのメニューを見ている時」に限定
   pick_1: (ctx) => {
+    // 機械を見てる時は絶対に機械（BGM/terminal判定しない）
+    if (ctx.lastFocus === 'machine_1' || ctx.lastFocus === 'machine_2' || ctx.lastFocus === 'machine_3') {
+      const m1 = ACTIONS.machine_1(ctx);
+      return { ...m1, msgs: [{ delay: 600, text: '1番ね' }, ...m1.msgs] };
+    }
     // BGMプリセット選択中（lastFocus が bgm_menu の時だけ）
     if (ctx.lastFocus === 'bgm_menu' && !ctx.flags.alphaPlayed) {
-      return ACTIONS.die_bgm_1 ? ACTIONS.die_bgm_1(ctx) : { msgs: [{ delay: 700, text: '1番' }] };
+      return ACTIONS.die_bgm_1(ctx);
     }
     // 決済端末選択中
     if (ctx.lastFocus === 'terminal') {
-      return ACTIONS.die_terminal_1 ? ACTIONS.die_terminal_1(ctx) : { msgs: [{ delay: 700, text: '1番' }] };
+      return ACTIONS.die_terminal_1(ctx);
     }
     // それ以外は機械選択（先に「1番ね」と返事）
     const m1 = ACTIONS.machine_1(ctx);
-    return {
-      ...m1,
-      msgs: [{ delay: 600, text: '1番ね' }, ...m1.msgs],
-    };
+    return { ...m1, msgs: [{ delay: 600, text: '1番ね' }, ...m1.msgs] };
   },
   pick_2: (ctx) => {
+    if (ctx.lastFocus === 'machine_1' || ctx.lastFocus === 'machine_2' || ctx.lastFocus === 'machine_3') {
+      const m2 = ACTIONS.machine_2(ctx);
+      return { ...m2, msgs: [{ delay: 600, text: '2番ね' }, ...m2.msgs] };
+    }
     if (ctx.lastFocus === 'bgm_menu' && !ctx.flags.alphaPlayed) {
-      return ACTIONS.die_bgm_2 ? ACTIONS.die_bgm_2(ctx) : { msgs: [{ delay: 700, text: '2番' }] };
+      return ACTIONS.die_bgm_2(ctx);
     }
     if (ctx.lastFocus === 'terminal') {
-      return ACTIONS.die_terminal_2 ? ACTIONS.die_terminal_2(ctx) : { msgs: [{ delay: 700, text: '2番' }] };
+      return ACTIONS.die_terminal_2(ctx);
     }
     const m2 = ACTIONS.machine_2(ctx);
-    return {
-      ...m2,
-      msgs: [{ delay: 600, text: '2番ね' }, ...m2.msgs],
-    };
+    return { ...m2, msgs: [{ delay: 600, text: '2番ね' }, ...m2.msgs] };
   },
   pick_3: (ctx) => {
+    if (ctx.lastFocus === 'machine_1' || ctx.lastFocus === 'machine_2' || ctx.lastFocus === 'machine_3') {
+      const m3 = ACTIONS.machine_3(ctx);
+      return { ...m3, msgs: [{ delay: 600, text: '3番ね' }, ...m3.msgs] };
+    }
     if (ctx.lastFocus === 'bgm_menu' && !ctx.flags.alphaPlayed) {
       return ACTIONS.bgm_play_alpha(ctx);
     }
@@ -716,14 +723,11 @@ const ACTIONS = {
       return ACTIONS.terminal_3(ctx);
     }
     const m3 = ACTIONS.machine_3(ctx);
-    return {
-      ...m3,
-      msgs: [{ delay: 600, text: '3番ね' }, ...m3.msgs],
-    };
+    return { ...m3, msgs: [{ delay: 600, text: '3番ね' }, ...m3.msgs] };
   },
   pick_4: (ctx) => {
     if (ctx.lastFocus === 'bgm_menu' && !ctx.flags.alphaPlayed) {
-      return ACTIONS.die_bgm_4 ? ACTIONS.die_bgm_4(ctx) : { msgs: [{ delay: 700, text: '4番' }] };
+      return ACTIONS.die_bgm_4(ctx);
     }
     return { msgs: [{ delay: 700, text: '4番？何を選ぶ？' }] };
   },
