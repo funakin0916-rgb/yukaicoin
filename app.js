@@ -44,6 +44,7 @@ const IMAGE_URIS = {
   'A8-Counter-Menu': './images/A8-Counter-Menu.webp',
   'A8-Counter-Front': './images/A8-Counter-Front.webp',
   'U1': './images/U1.webp',
+  'D1': './images/D1.webp',
   'A8-Terminal': './images/A8-Terminal.webp',
   'A8-Receipt': './images/A8-Receipt.webp',
   // 鏡（2段階）
@@ -708,9 +709,12 @@ const ACTIONS = {
               ])
         : [
             { delay: 800, text: '下、撮るね' },
-            { delay: 2000, text: 'リノリウム' },
+            { delay: 2000, text: '', image: 'D1' },
+            { delay: 2400, text: 'あれ、ピック…' },
+            { delay: 2400, text: '懐かしい、学生の頃バンドやってたから' },
           ],
       setFlag: ctx.stage === 'back_room' && ctx.flags.lightOn ? 'readMemo' : null,
+      setFocus: ctx.stage !== 'back_room' ? 'floor' : null,
     };
   },
   look_left: (ctx) => ({
@@ -1022,23 +1026,21 @@ const ACTIONS = {
     msgs: ctx.stage === 'back_room'
       ? [
           { delay: 700, text: 'ギター取った', image: 'E2' },
-          { delay: 2400, text: '弦は張ってる、でも……' },
-          { delay: 2400, text: '音、変。チューニングが狂ってる' },
-          { delay: 2400, text: '2弦が切れて垂れてる' },
+          { delay: 2400, text: '弦張ってるけど、チューニング狂ってる' },
+          { delay: 2400, text: 'バンドの時の感覚で分かる' },
         ]
       : [
           { delay: 700, text: 'ここにギターはない' },
         ],
     setFlag: 'tookGuitar',
+    setFocus: 'guitar',
   }),
   // ライトで照らす
   use_light: (ctx) => ({
     msgs: ctx.stage === 'back_room'
       ? [
-          { delay: 700, text: 'スマホのライトつけた' },
+          { delay: 700, text: 'ライトつけた' },
           { delay: 2200, text: '床、明るくなった' },
-          { delay: 2400, text: '紙が見える、何か書いてある' },
-          { delay: 2200, text: '「下を見て」で読める' },
         ]
       : [
           { delay: 700, text: 'うん、つけた' },
