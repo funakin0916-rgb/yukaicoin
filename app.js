@@ -82,10 +82,15 @@ const getReiAvatar = (expression) => `C1-${expression}`;
 // 初期メッセージ
 // =============================================================================
 
-const INITIAL_MESSAGES = [
-  { delay: 800, text: 'ちょっといい？' },
-  { delay: 2000, text: 'コインランドリーから出られなくなった' },
-  { delay: 2400, text: '誰にも連絡つかない、君だけ繋がる' },
+const INITIAL_MESSAGES = [];
+
+// プレイヤーの最初の一言に対する玲の応答
+const FIRST_CONTACT_MESSAGES = [
+  { delay: 600, text: 'あ' },
+  { delay: 1200, text: '繋がった！' },
+  { delay: 2000, text: 'よかった……' },
+  { delay: 2200, text: 'コインランドリーから出られなくなって' },
+  { delay: 2400, text: '誰にも連絡つかなかった' },
   { delay: 2200, text: '助けて' },
 ];
 
@@ -1273,23 +1278,11 @@ function YukaiLaundromat() {
     processQueue();
   }, [processQueue]);
 
-  // 初期メッセージ
+  // 初期化（intro ステージ：玲は黙ってる、プレイヤー入力を待つ）
   useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      await sleep(800);
-      if (cancelled) return;
-      queueRei(INITIAL_MESSAGES);
-      // 全部送信後に explore へ
-      const totalDelay = INITIAL_MESSAGES.reduce((a, m) => a + m.delay + 400, 800);
-      setTimeout(() => {
-        if (cancelled) return;
-        setStage('explore');
-        setExploreStart(Date.now());
-      }, totalDelay);
-    })();
-    return () => { cancelled = true; };
-  }, [loopCount, queueRei]);
+    setStage('intro');
+    setIsLocked(false);  // 入力可能にする
+  }, [loopCount]);
 
   // タイマー（第1幕・第2幕）
   useEffect(() => {
@@ -1440,6 +1433,18 @@ function YukaiLaundromat() {
     const text = inputText.trim();
     setMessages((prev) => [...prev, { sender: 'user', text, ts: Date.now() }]);
     setInputText('');
+    
+    // 最初の一言 → 玲が「あ、繋がった！」から始める
+    if (stage === 'intro') {
+      queueRei(FIRST_CONTACT_MESSAGES);
+      // 全部送信後に explore へ
+      const totalDelay = FIRST_CONTACT_MESSAGES.reduce((a, m) => a + m.delay + 400, 0);
+      setTimeout(() => {
+        setStage('explore');
+        setExploreStart(Date.now());
+      }, totalDelay);
+      return;
+    }
     
     const ctx = {
       loopCount, stage, flags, machineLayers, foldedMachines, tries,
@@ -1612,7 +1617,7 @@ function YukaiLaundromat() {
               onChange={(e) => setInputText(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
               disabled={isLocked}
-              placeholder={isLocked ? '玲が考えてる...' : 'メッセージを入力'}
+              placeholder={isLocked ? '玲が考えてる...' : stage === 'intro' ? '一言、送ってみる' : 'メッセージを入力'}
               className="flex-1 bg-gray-700 text-white px-3 py-2 rounded text-sm disabled:opacity-50"
             />
             <button
