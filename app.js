@@ -139,7 +139,7 @@ const DICTIONARY = {
   // ========================================
   'mirror_breathe': {
     priority: 80,
-    keywords: ['息かけ', '息吹', '息で曇', '吹きかけ', '曇らせ', 'くもらせ', 'はぁ', 'ハァ', '息で', '息を', '息はく', '息を吹', '息かけて', '曇ら'],
+    keywords: ['息かけ', '息吹', '息で曇', '吹きかけ', '曇らせ', 'くもらせ', 'はぁ', 'ハァ', '息で', '息を', '息はく', '息を吹', '息かけて', '曇ら', 'はっきり', 'クリア', 'もっと見', 'よく見', '読み取', 'しっかり見'],
     response: 'mirror_breathe',
   },
   'mirror': {
@@ -684,79 +684,31 @@ const ACTIONS = {
     ],
   }),
   // 上下左右
-  look_up: (ctx) => {
-    // カウンターを見ている時の「上」 → カウンター上の決済端末
-    if (ctx.lastFocus === 'counter' || ctx.lastFocus === 'counter_under') {
-      return {
-        msgs: [
-          { delay: 700, text: 'カウンター上、撮るね' },
-          { delay: 2200, text: '', image: 'A8-Terminal' },
+  look_up: (ctx) => ({
+    msgs: ctx.stage === 'back_room'
+      ? [
+          { delay: 800, text: '天井' },
+          { delay: 2000, text: '配管、シミ' },
+        ]
+      : [
+          { delay: 800, text: '上、撮るね' },
+          { delay: 2000, text: '', image: 'U1' },
         ],
-        setFlag: 'seenTerminal',
-        setFocus: 'terminal',
-      };
-    }
-    // 通常：天井を見る
-    return {
-      msgs: ctx.stage === 'back_room'
-        ? [
-            { delay: 800, text: '天井' },
-            { delay: 2000, text: '配管、シミ' },
-          ]
-        : [
-            { delay: 800, text: '天井、撮るね' },
-            { delay: 2000, text: '', image: 'U1' },
-          ],
-    };
-  },
+  }),
   look_down: (ctx) => {
-    // カウンターを見ている時の「下」 → BGM装置
-    if (ctx.lastFocus === 'counter') {
-      return {
-        msgs: [
-          { delay: 700, text: 'カウンターの下、覗き込む' },
-          { delay: 2200, text: '撮った', image: 'A8-Counter' },
-        ],
-        setFlag: 'foundBgm',
-        setFocus: 'counter_under',
-      };
-    }
-    // 鏡を見ている時の「下」 → 鏡の下（壁）
-    if (ctx.lastFocus === 'mirror') {
-      return {
-        msgs: [
-          { delay: 700, text: '鏡の下、覗いてみる' },
-          { delay: 2200, text: '壁、特に何もない' },
-        ],
-      };
-    }
-    // 掲示板を見ている時の「下」 → 掲示板の下
-    if (ctx.lastFocus === 'board') {
-      return {
-        msgs: [
-          { delay: 700, text: '掲示板の下、見てみる' },
-          { delay: 2200, text: '壁、特に何もない' },
-        ],
-      };
-    }
-    // 通常
     return {
       msgs: ctx.stage === 'back_room'
         ? (ctx.flags.lightOn
             ? [
-                { delay: 700, text: '床に紙がある、明るくなった', image: 'D2' },
-                { delay: 2400, text: '誰かの手記みたい' },
-                { delay: 2200, text: '読んでみて' },
+                { delay: 700, text: '床、紙がある', image: 'D2' },
               ]
             : [
-                { delay: 700, text: '床に何かある', image: 'D2-Dark' },
-                { delay: 2200, text: '暗くて読めない' },
-                { delay: 2000, text: '明るくしないと' },
+                { delay: 700, text: '床、何かある', image: 'D2-Dark' },
+                { delay: 2200, text: '暗い' },
               ])
         : [
-            { delay: 800, text: '床を見た' },
-            { delay: 2000, text: 'リノリウム、すり減ってる' },
-            { delay: 2200, text: '何か書いてある気がする' },
+            { delay: 800, text: '下、撮るね' },
+            { delay: 2000, text: 'リノリウム' },
           ],
       setFlag: ctx.stage === 'back_room' && ctx.flags.lightOn ? 'readMemo' : null,
     };
@@ -776,15 +728,13 @@ const ACTIONS = {
   look_right: (ctx) => ({
     msgs: ctx.stage === 'back_room'
       ? [
-          { delay: 700, text: '右を見た' },
-          { delay: 2000, text: '空のギターケース' },
-          { delay: 2200, text: '中身は……ない' },
+          { delay: 700, text: '右、ギターケース' },
         ]
       : [
-          { delay: 700, text: '右の洗濯機の上を見た' },
-          { delay: 2000, text: '判読不能な走り書き' },
-          { delay: 2200, text: '誰かが書いた跡だけ残ってる' },
+          { delay: 700, text: '右、洗濯機' },
+          { delay: 1800, text: 'どれ見る？' },
         ],
+    setFocus: ctx.stage !== 'back_room' ? 'machines_question' : null,
   }),
   // 機械
   machines_ask: () => ({
