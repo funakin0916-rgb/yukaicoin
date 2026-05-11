@@ -43,6 +43,7 @@ const IMAGE_URIS = {
   'A8-Counter': './images/A8-Counter.webp',
   'A8-Counter-Menu': './images/A8-Counter-Menu.webp',
   'A8-Counter-Front': './images/A8-Counter-Front.webp',
+  'U1': './images/U1.webp',
   'A8-Terminal': './images/A8-Terminal.webp',
   'A8-Receipt': './images/A8-Receipt.webp',
   // 鏡（2段階）
@@ -605,7 +606,6 @@ const ACTIONS = {
     msgs: ctx.flags.breathedOnMirror
       ? [
           { delay: 700, text: '鏡を撮った', image: 'L1' },
-          { delay: 2400, text: '「210 と 220 を 合 わ せ て」' },
           { delay: 2200, text: 'はっきり読める' },
         ]
       : [
@@ -613,8 +613,8 @@ const ACTIONS = {
           { delay: 2000, text: '映ってない' },
           { delay: 1500, text: '私だけ' },
           { delay: 1800, text: '後ろの椅子は普通に映ってる' },
-          { delay: 2400, text: '何か……薄く文字みたいなのが、', image: 'L1-1' },
-          { delay: 2200, text: '「220 と」だけ読める' },
+          { delay: 2400, text: '何か……薄く文字みたいなのが', image: 'L1-1' },
+          { delay: 2200, text: 'よく見えない' },
         ],
     setFlag: 'seenMirror',
   }),
@@ -622,9 +622,8 @@ const ACTIONS = {
     msgs: ctx.flags.seenMirror
       ? [
           { delay: 700, text: '鏡に息かけてみた' },
-          { delay: 2200, text: '曇った……文字が浮かんでくる', image: 'L1' },
-          { delay: 2400, text: '「210 と 220 を 合 わ せ て」' },
-          { delay: 2400, text: '全部読めた' },
+          { delay: 2200, text: '曇った', image: 'L1' },
+          { delay: 2400, text: '文字、浮かんできた' },
         ]
       : [
           { delay: 700, text: 'まず鏡を見つけないと' },
@@ -635,10 +634,6 @@ const ACTIONS = {
     msgs: [
       { delay: 700, text: '掲示板撮った', image: 'A6-α' },
       { delay: 2400, text: 'いろいろ貼ってある' },
-      { delay: 2200, text: '「α-life 休業のお知らせ」「店長行方不明」' },
-      { delay: 2200, text: 'ピアノ調律師の求人' },
-      { delay: 2400, text: '町内会のお知らせ、ごみの分別……' },
-      { delay: 2200, text: '普通のコインランドリーの掲示板' },
     ],
     setFlag: 'seenBoard',
   }),
@@ -662,9 +657,9 @@ const ACTIONS = {
   look_up: () => ({
     msgs: [
       { delay: 800, text: '天井見上げた' },
-      { delay: 2000, text: '蛍光灯、薄汚れたシミ' },
-      { delay: 2200, text: '……「2:14」って読める' },
-      { delay: 1800, text: '気のせいかも' },
+      { delay: 2000, text: '撮った', image: 'U1' },
+      { delay: 2200, text: 'シミだらけ' },
+      { delay: 2000, text: 'なんか変な感じ' },
     ],
   }),
   look_down: (ctx) => ({
@@ -672,22 +667,18 @@ const ACTIONS = {
       ? (ctx.flags.lightOn
           ? [
               { delay: 700, text: '床に紙がある、明るくなった', image: 'D2' },
-              { delay: 2400, text: '読める……顧問の手記みたい' },
-              { delay: 2400, text: '「篠田は今日も全員のチューニングを丁寧に合わせていた」' },
-              { delay: 2400, text: '「俺がやらないと みんなの音が揃わないから」' },
-              { delay: 2400, text: '「あいつが消えてから 誰も引き継げない」' },
-              { delay: 2400, text: '「ライブは中止になった」' },
-              { delay: 2200, text: '軽音部顧問 田島' },
+              { delay: 2400, text: '誰かの手記みたい' },
+              { delay: 2200, text: '読んでみて' },
             ]
           : [
               { delay: 700, text: '床に何かある', image: 'D2-Dark' },
-              { delay: 2200, text: '紙……でも暗くて読めない' },
-              { delay: 2000, text: 'もっと明るくしないと' },
+              { delay: 2200, text: '暗くて読めない' },
+              { delay: 2000, text: '明るくしないと' },
             ])
       : [
           { delay: 800, text: '床を見た' },
-          { delay: 2000, text: 'リノリウムの床、すり減ってる' },
-          { delay: 2200, text: 'チョークの跡みたいな……「眠れない」って読める' },
+          { delay: 2000, text: 'リノリウム、すり減ってる' },
+          { delay: 2200, text: '何か書いてある気がする' },
         ],
     setFlag: ctx.stage === 'back_room' && ctx.flags.lightOn ? 'readMemo' : null,
   }),
@@ -696,13 +687,11 @@ const ACTIONS = {
       ? [
           { delay: 700, text: '左の壁見た' },
           { delay: 2000, text: 'コード表のメモ書きが貼ってある' },
-          { delay: 2200, text: '簡単なコードが羅列されてるだけ' },
         ]
       : [
-          { delay: 700, text: '左を見た……鏡がある' },
-          { delay: 2000, text: '鏡を撮るね', image: 'L1-1' },
-          { delay: 2400, text: '……何か薄く浮いてる、「220 と」だけ読める' },
-          { delay: 2200, text: '残りは曇ってて見えない' },
+          { delay: 700, text: '左を見た' },
+          { delay: 2000, text: '鏡があった、撮るね', image: 'L1-1' },
+          { delay: 2400, text: '……何か薄く浮いてる' },
         ],
     setFlag: ctx.stage !== 'back_room' ? 'seenMirror' : null,
   }),
@@ -734,7 +723,7 @@ const ACTIONS = {
       [
         { delay: 700, text: 'ポケット探る' },
         { delay: 2000, text: 'チューナーが出てきた', image: 'B1-Tuner' },
-        { delay: 2400, text: '「A=440Hz」で固まってる、メーターど真ん中' },
+        { delay: 2400, text: '何か数字が出てる' },
       ],
       [
         { delay: 700, text: 'もっと深く見る' },
@@ -762,9 +751,8 @@ const ACTIONS = {
         { delay: 2000, text: 'イヤホンと、しおり' },
       ],
       [
-        { delay: 700, text: 'しおりを撮った、見て', image: 'B2-3' },
-        { delay: 2400, text: '「α波で深い眠りへ」' },
-        { delay: 2200, text: '不眠症の本のしおり' },
+        { delay: 700, text: 'しおりを撮った', image: 'B2-3' },
+        { delay: 2200, text: '何か書いてある' },
       ],
     ];
     return {
@@ -868,10 +856,7 @@ const ACTIONS = {
     msgs: [
       { delay: 700, text: '3番押した、再印字' },
       { delay: 2200, text: 'レシート出てきた', image: 'A8-Receipt' },
-      { delay: 2400, text: '「PAYMENT TERMINAL #αN-440」' },
-      { delay: 2400, text: '「端末: αN/440-C」「日時 02:14」' },
-      { delay: 2400, text: '「決済音響: 2ch L/R別」' },
-      { delay: 2400, text: '「推奨帯: 200-250Hz」「許容差: ±10Hz」' },
+      { delay: 2400, text: '何か書いてある' },
     ],
     setFlag: 'gotReceipt',
   }),
