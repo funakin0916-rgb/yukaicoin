@@ -887,7 +887,7 @@ const ACTIONS = {
           { delay: 2400, text: '奥のドアが「カチッ」って開いた音' },
         ]
       : [
-          { delay: 700, text: 'まずBGM装置の電源を入れないと' },
+          { delay: 700, text: 'え、何の？' },
         ],
     setFlag: 'alphaPlayed',
     triggerStage: 'after_alpha',
