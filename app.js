@@ -20,43 +20,43 @@ const STAGE_TIME_LIMIT = 300; // 5分
 // =============================================================================
 const IMAGE_URIS = {
   // 店内
-  'A1-1': '/images/A1-1.webp',
-  'A1-2': '/images/A1-2.webp',
-  'A1-3': '/images/A1-3.webp',
-  'A1-Clock': '/images/A1-Clock.webp',
-  'A6-α': '/images/A6-alpha.webp',
+  'A1-1': './images/A1-1.webp',
+  'A1-2': './images/A1-2.webp',
+  'A1-3': './images/A1-3.webp',
+  'A1-Clock': './images/A1-Clock.webp',
+  'A6-α': './images/A6-alpha.webp',
   // キャラ
-  'C1-1': '/images/C1-1.webp',
-  'C1-2': '/images/C1-2.webp',
-  'C1-3': '/images/C1-3.webp',
-  'C1-4': '/images/C1-4.webp',
-  'C1-5': '/images/C1-5.webp',
-  'C2-1': '/images/C2-1.webp',
-  'C2-2': '/images/C2-2.webp',
+  'C1-1': './images/C1-1.webp',
+  'C1-2': './images/C1-2.webp',
+  'C1-3': './images/C1-3.webp',
+  'C1-4': './images/C1-4.webp',
+  'C1-5': './images/C1-5.webp',
+  'C2-1': './images/C2-1.webp',
+  'C2-2': './images/C2-2.webp',
   // 機械の遺品
-  'B1-3': '/images/B1-3.webp',
-  'B1-4': '/images/B1-4.webp',
-  'B1-Tuner': '/images/B1-Tuner.webp',
-  'B2-3': '/images/B2-3.webp',
-  'B3-3-α': '/images/B3-3-alpha.webp',
+  'B1-3': './images/B1-3.webp',
+  'B1-4': './images/B1-4.webp',
+  'B1-Tuner': './images/B1-Tuner.webp',
+  'B2-3': './images/B2-3.webp',
+  'B3-3-α': './images/B3-3-alpha.webp',
   // カウンター
-  'A8-Counter': '/images/A8-Counter.webp',
-  'A8-Counter-Menu': '/images/A8-Counter-Menu.webp',
-  'A8-Terminal': '/images/A8-Terminal.webp',
-  'A8-Receipt': '/images/A8-Receipt.webp',
+  'A8-Counter': './images/A8-Counter.webp',
+  'A8-Counter-Menu': './images/A8-Counter-Menu.webp',
+  'A8-Terminal': './images/A8-Terminal.webp',
+  'A8-Receipt': './images/A8-Receipt.webp',
   // 鏡（2段階）
-  'L1-1': '/images/L1-1.webp',
-  'L1': '/images/L1.webp',
+  'L1-1': './images/L1-1.webp',
+  'L1': './images/L1.webp',
   // ドア・奥の部屋
-  'A9-Door-Open': '/images/A9-Door-Open.webp',
-  'E1': '/images/E1.webp',
-  'E2': '/images/E2.webp',
+  'A9-Door-Open': './images/A9-Door-Open.webp',
+  'E1': './images/E1.webp',
+  'E2': './images/E2.webp',
   // 手記（2段階）
-  'D2-Dark': '/images/D2-Dark.webp',
-  'D2': '/images/D2.webp',
+  'D2-Dark': './images/D2-Dark.webp',
+  'D2': './images/D2.webp',
   // エンディング
-  'X9': '/images/X9.webp',
-  'X10': '/images/X10.webp',
+  'X9': './images/X9.webp',
+  'X10': './images/X10.webp',
 };
 
 const getImageUri = (id) => IMAGE_URIS[id] || null;
