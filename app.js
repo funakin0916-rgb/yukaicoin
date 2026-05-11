@@ -64,17 +64,10 @@ const IMAGE_URIS = {
 
 const getImageUri = (id) => IMAGE_URIS[id] || null;
 
-// 周回による画像の変化
+// 周回による画像変化は無効化（常に基本画像を使う）
 const getImageId = (baseId, loopCount) => {
-  if (baseId === 'A1') {
-    if (loopCount >= 5) return 'A1-3';
-    if (loopCount >= 3) return 'A1-2';
-    return 'A1-1';
-  }
-  if (baseId === 'C2') {
-    if (loopCount >= 3) return 'C2-2';
-    return 'C2-1';
-  }
+  if (baseId === 'A1') return 'A1-1';
+  if (baseId === 'C2') return 'C2-1';
   return baseId;
 };
 
@@ -369,6 +362,11 @@ const DICTIONARY = {
     priority: 65,
     keywords: ['畳ん', '畳む', 'たたん', 'たたむ', '畳んで', 'たたんで', '畳もう', 'たたもう', '片付け', '片づけ', '整理'],
     response: 'fold',
+  },
+  'machine_stop': {
+    priority: 65,
+    keywords: ['洗濯機止', '止めて', '止める', '停止', 'ストップ', 'stop', '電源切', '電源オフ', '電源OFF', 'スイッチ切'],
+    response: 'machine_stop',
   },
   
   // ========================================
@@ -802,23 +800,21 @@ const ACTIONS = {
   machine_1: (ctx) => {
     const layer = ctx.machineLayers['1'];
     if (ctx.foldedMachines.has('1')) {
-      return { msgs: [{ delay: 700, text: '1番機はもう開けた、畳んだ後' }] };
+      return { msgs: [{ delay: 700, text: '左の洗濯機はもう開けた' }] };
     }
     const layers = [
       [
-        { delay: 700, text: '1番機、回ってる' },
+        { delay: 700, text: '左の洗濯機、回ってる' },
         { delay: 2000, text: '高校のジャージ、3年A組のゼッケン' },
-        { delay: 2200, text: 'もっと探ってみる？' },
+        { delay: 2200, text: 'もっと探る？' },
       ],
       [
         { delay: 700, text: 'ポケット探る' },
         { delay: 2000, text: 'チューナーが出てきた', image: 'B1-Tuner' },
-        { delay: 2400, text: '何か数字が出てる' },
       ],
       [
         { delay: 700, text: 'もっと深く見る' },
-        { delay: 2200, text: '楽譜の切れ端、写真送る', image: 'B1-3' },
-        { delay: 2400, text: 'ただの五線譜、何か走り書きはない' },
+        { delay: 2200, text: '楽譜の切れ端', image: 'B1-3' },
       ],
     ];
     return {
@@ -830,12 +826,13 @@ const ACTIONS = {
   machine_2: (ctx) => {
     const layer = ctx.machineLayers['2'];
     if (ctx.foldedMachines.has('2')) {
-      return { msgs: [{ delay: 700, text: '2番機はもう開けた、畳んだ後' }] };
+      return { msgs: [{ delay: 700, text: '真ん中の洗濯機はもう開けた' }] };
     }
     const layers = [
       [
-        { delay: 700, text: '2番機、回ってる' },
+        { delay: 700, text: '真ん中の洗濯機、回ってる' },
         { delay: 2000, text: 'ヨガパンツ、汗の匂い' },
+        { delay: 2200, text: 'もっと探る？' },
       ],
       [
         { delay: 700, text: 'ポケット' },
@@ -843,7 +840,6 @@ const ACTIONS = {
       ],
       [
         { delay: 700, text: 'しおりを撮った', image: 'B2-3' },
-        { delay: 2200, text: '何か書いてある' },
       ],
     ];
     return {
@@ -855,22 +851,21 @@ const ACTIONS = {
   machine_3: (ctx) => {
     const layer = ctx.machineLayers['3'];
     if (ctx.foldedMachines.has('3')) {
-      return { msgs: [{ delay: 700, text: '3番機はもう開けた、畳んだ後' }] };
+      return { msgs: [{ delay: 700, text: '右の洗濯機はもう開けた' }] };
     }
     const layers = [
       [
-        { delay: 700, text: '3番機、回ってる' },
+        { delay: 700, text: '右の洗濯機、回ってる' },
         { delay: 2000, text: 'スーツのジャケット' },
+        { delay: 2200, text: 'もっと探る？' },
       ],
       [
         { delay: 700, text: '内ポケット、名刺' },
-        { delay: 2200, text: 'よく読めない……苗字がかろうじて' },
-        { delay: 1800, text: 'お客さんの忘れ物っぽい' },
+        { delay: 2200, text: 'よく読めない、苗字だけ' },
       ],
       [
-        { delay: 700, text: '名刺の裏も見てみる', image: 'B3-3-α' },
-        { delay: 2400, text: '滲んでる、読めない' },
-        { delay: 2200, text: '誰かの……仕事関係の人かな' },
+        { delay: 700, text: '名刺の裏', image: 'B3-3-α' },
+        { delay: 2400, text: '滲んでて読めない' },
       ],
     ];
     return {
@@ -917,11 +912,40 @@ const ACTIONS = {
     };
   },
   fold: (ctx) => {
-    // 直近に開けた機械を畳む（簡易実装）
+    // 直前に開けた機械を畳む（lastFocusで分かる）
+    if (ctx.lastFocus === 'machine_1' || ctx.lastFocus === 'machine_2' || ctx.lastFocus === 'machine_3') {
+      const num = ctx.lastFocus.split('_')[1];
+      const labels = { '1': '左', '2': '真ん中', '3': '右' };
+      return {
+        msgs: [
+          { delay: 700, text: `${labels[num]}の洗濯機、畳んだ` },
+          { delay: 2000, text: '中身は取り出した' },
+        ],
+        addFolded: num,
+      };
+    }
     return {
       msgs: [
         { delay: 700, text: 'どれ畳む？' },
-        { delay: 2000, text: '畳むなら機械の番号教えて' },
+        { delay: 2000, text: '左、真ん中、右？' },
+      ],
+    };
+  },
+  // 洗濯機を止める（畳むと同じ扱い）
+  machine_stop: (ctx) => {
+    if (ctx.lastFocus === 'machine_1' || ctx.lastFocus === 'machine_2' || ctx.lastFocus === 'machine_3') {
+      const num = ctx.lastFocus.split('_')[1];
+      const labels = { '1': '左', '2': '真ん中', '3': '右' };
+      return {
+        msgs: [
+          { delay: 700, text: `${labels[num]}の洗濯機、止めた` },
+        ],
+      };
+    }
+    return {
+      msgs: [
+        { delay: 700, text: 'どれ止める？' },
+        { delay: 2000, text: '左、真ん中、右？' },
       ],
     };
   },
@@ -1273,13 +1297,17 @@ const EXACT_WORD_MAP = {
   '前': 'photo', 'まえ': 'photo', '正面': 'photo',
   '後ろ': 'turn_around', 'うしろ': 'turn_around', '背後': 'turn_around', '振り向く': 'turn_around',
   '裏': 'machine_back',
-  '中': 'machine_inside',
   // オブジェクト
   '鏡': 'mirror', 'かがみ': 'mirror', 'ミラー': 'mirror',
   '時計': 'clock', 'とけい': 'clock',
   '掲示板': 'board', 'けいじばん': 'board', 'ボード': 'board',
   'カウンター': 'counter_general', '受付': 'counter_general',
   '洗濯機': 'machines_ask', 'せんたくき': 'machines_ask', '機械': 'machines_ask',
+  '左の洗濯機': 'machine_1', '左の機械': 'machine_1', '左側': 'machine_1',
+  '真ん中': 'machine_2', '真ん中の洗濯機': 'machine_2', '中央': 'machine_2', '中央の洗濯機': 'machine_2', 'まんなか': 'machine_2',
+  '右の洗濯機': 'machine_3', '右の機械': 'machine_3',
+  '探る': 'machine_inside', '探って': 'machine_inside', 'もっと探る': 'machine_inside', 'もっと': 'machine_inside',
+  '中': 'machine_inside', 'なか': 'machine_inside',
   'ドア': 'open_door', 'door': 'open_door', '扉': 'open_door',
   'ギター': 'guitar_take', 'guitar': 'guitar_take',
   'ライト': 'use_light', '明かり': 'use_light', 'light': 'use_light',
@@ -1474,6 +1502,9 @@ function YukaiLaundromat() {
     if (result.setFlag) setFlags((f) => ({ ...f, [result.setFlag]: true }));
     if (result.incrementMachine) {
       setMachineLayers((m) => ({ ...m, [result.incrementMachine]: Math.min(3, (m[result.incrementMachine] || 0) + 1) }));
+    }
+    if (result.addFolded) {
+      setFoldedMachines((s) => new Set([...s, result.addFolded]));
     }
     if (result.setFocus !== undefined) setLastFocus(result.setFocus);
     if (result.triggerStage) {
