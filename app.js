@@ -1049,26 +1049,39 @@ const ACTIONS = {
     triggerStage: 'end_bad_b',
   }),
   turn_around: (ctx) => {
-    // 第2幕（奥の部屋）では即死
+    // 第2幕（奥の部屋）= 怪異②（篠田）からのメッセージ
     if (ctx.stage === 'back_room') {
       return {
         msgs: [
           { delay: 700, text: '……振り向く' },
-          { delay: 2400, text: 'ｱ', isGlitch: true },
-          { delay: 2400, text: 'ｱｱｱｱ', isGlitch: true },
-          { delay: 2400, text: 'ﾐﾗﾚﾀ', isGlitch: true, isFading: true },
+          { delay: 2400, text: 'あ', isGlitch: true },
+          { delay: 2400, text: 'いる', isGlitch: true },
+          { delay: 2000, text: '──' },
+          // ここから怪異②（篠田）からのメッセージ（ゆっくり）
+          { delay: 3500, text: 'ﾅ', isGlitch: true, isGhost: true },
+          { delay: 3000, text: 'ﾅ ｵ', isGlitch: true, isGhost: true },
+          { delay: 3000, text: 'ﾅ ｵ ｼ', isGlitch: true, isGhost: true },
+          { delay: 3000, text: 'ﾅ ｵ ｼ ﾃ', isGlitch: true, isGhost: true },
+          { delay: 4000, text: '', isFading: true },
         ],
         triggerStage: 'end_bad_b',
       };
     }
-    // crisis 4以上（パニック段階）= 怪異が後ろに張り付いてる、振り向くと即死
+    // crisis 4以上 = 怪異①（ヨガ女性）が後ろに張り付いてる、振り向くと即死
     if (ctx.crisis >= 4) {
       return {
         msgs: [
-          { delay: 700, text: '振り向いた' },
-          { delay: 2200, text: 'すぐ後ろに', isGlitch: true },
-          { delay: 2400, text: 'ｲﾔ', isGlitch: true },
-          { delay: 2400, text: 'ｲﾔﾀﾞｲﾔﾀﾞ', isGlitch: true, isFading: true },
+          { delay: 700, text: '……振り向く' },
+          { delay: 2400, text: 'あ', isGlitch: true },
+          { delay: 2400, text: 'いる', isGlitch: true },
+          { delay: 2000, text: '──' },
+          // ここから怪異①（ヨガ女性）からのメッセージ（ゆっくり、ネムラセテ）
+          { delay: 3500, text: 'ﾈ', isGlitch: true, isGhost: true },
+          { delay: 3000, text: 'ﾈ ﾑ', isGlitch: true, isGhost: true },
+          { delay: 3000, text: 'ﾈ ﾑ ﾗ', isGlitch: true, isGhost: true },
+          { delay: 3000, text: 'ﾈ ﾑ ﾗ ｾ', isGlitch: true, isGhost: true },
+          { delay: 3000, text: 'ﾈ ﾑ ﾗ ｾ ﾃ', isGlitch: true, isGhost: true },
+          { delay: 4000, text: '', isFading: true },
         ],
         triggerStage: 'end_bad_a',
       };
@@ -1315,6 +1328,7 @@ function YukaiLaundromat() {
         text: msg.text,
         image: msg.image,
         isGlitch: msg.isGlitch,
+        isGhost: msg.isGhost,
         isFading: msg.isFading,
         ts: Date.now(),
       }]);
@@ -1531,9 +1545,21 @@ function YukaiLaundromat() {
                   ? 'bg-green-600 text-white'
                   : msg.sender === 'system'
                   ? 'bg-red-900/60 text-red-300 border border-red-700'
+                  : msg.isGhost
+                  ? 'bg-black text-red-500 font-mono tracking-widest text-base border border-red-900'
                   : `bg-gray-700 text-white ${msg.isGlitch ? 'font-mono tracking-wider text-red-300' : ''}`
               }`}
-              style={msg.isGlitch ? { textShadow: '2px 0 #ff0040, -2px 0 #00d0ff' } : {}}
+              style={
+                msg.isGhost
+                  ? {
+                      textShadow: '0 0 8px #ff0040, 2px 0 #ff0040, -2px 0 #00d0ff',
+                      letterSpacing: '0.3em',
+                      animation: 'ghostShake 0.4s infinite, ghostGlow 1.5s infinite',
+                    }
+                  : msg.isGlitch
+                  ? { textShadow: '2px 0 #ff0040, -2px 0 #00d0ff' }
+                  : {}
+              }
             >
               {msg.image && (
                 <div className="mb-2">
