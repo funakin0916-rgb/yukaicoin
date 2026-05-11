@@ -632,23 +632,20 @@ const ACTIONS = {
   },
   clock: () => ({
     msgs: [
-      { delay: 700, text: '撮った', image: 'A1-Clock' },
-      { delay: 2000, text: '2:14で止まってる、秒針も動かない' },
+      { delay: 700, text: '時計、撮るね' },
+      { delay: 2000, text: '', image: 'A1-Clock' },
     ],
+    setFlag: 'seenClock',
+    setFocus: 'clock',
   }),
   mirror: (ctx) => ({
     msgs: ctx.flags.breathedOnMirror
       ? [
-          { delay: 700, text: '鏡を撮った', image: 'L1' },
-          { delay: 2200, text: 'はっきり読める' },
+          { delay: 700, text: '鏡', image: 'L1' },
         ]
       : [
-          { delay: 700, text: '……' },
-          { delay: 2000, text: '映ってない' },
-          { delay: 1500, text: '私だけ' },
-          { delay: 1800, text: '後ろの椅子は普通に映ってる' },
-          { delay: 2400, text: '何か……薄く文字みたいなのが', image: 'L1-1' },
-          { delay: 2200, text: 'よく見えない' },
+          { delay: 700, text: '鏡、撮るね' },
+          { delay: 2000, text: '', image: 'L1-1' },
         ],
     setFlag: 'seenMirror',
     setFocus: 'mirror',
@@ -656,20 +653,19 @@ const ACTIONS = {
   mirror_breathe: (ctx) => ({
     msgs: ctx.flags.seenMirror
       ? [
-          { delay: 700, text: '鏡に息かけてみた' },
-          { delay: 2200, text: '曇った', image: 'L1' },
-          { delay: 2400, text: '文字、浮かんできた' },
+          { delay: 700, text: '息かけた' },
+          { delay: 2200, text: '', image: 'L1' },
         ]
       : [
-          { delay: 700, text: 'まず鏡を見つけないと' },
+          { delay: 700, text: 'え、何に？' },
         ],
     setFlag: 'breathedOnMirror',
     setFocus: 'mirror',
   }),
   board: () => ({
     msgs: [
-      { delay: 700, text: '掲示板撮った', image: 'A6-α' },
-      { delay: 2400, text: 'いろいろ貼ってある' },
+      { delay: 700, text: '掲示板、撮るね' },
+      { delay: 2200, text: '', image: 'A6-α' },
     ],
     setFlag: 'seenBoard',
     setFocus: 'board',
@@ -678,16 +674,13 @@ const ACTIONS = {
     msgs: [
       { delay: 700, text: '自動ドア、センサー反応しない' },
       { delay: 2000, text: '手で押してもダメ' },
-      { delay: 2200, text: '奥にスタッフ用のドアもあるけど、暗証パネルが赤いランプ' },
     ],
     setFlag: 'checkedDoor',
   }),
   whatsee: () => ({
     msgs: [
       { delay: 800, text: '蛍光灯、洗濯機、長椅子' },
-      { delay: 2000, text: '奥にスタッフ用のドア' },
-      { delay: 1800, text: '受付カウンター、掲示板、自動販売機' },
-      { delay: 2000, text: '壁に古い鏡' },
+      { delay: 2000, text: 'カウンター、掲示板、鏡' },
     ],
   }),
   // 上下左右
@@ -696,9 +689,8 @@ const ACTIONS = {
     if (ctx.lastFocus === 'counter' || ctx.lastFocus === 'counter_under') {
       return {
         msgs: [
-          { delay: 700, text: 'カウンター上、決済端末' },
-          { delay: 2200, text: '撮った', image: 'A8-Terminal' },
-          { delay: 2400, text: 'メニュー出てる' },
+          { delay: 700, text: 'カウンター上、撮るね' },
+          { delay: 2200, text: '', image: 'A8-Terminal' },
         ],
         setFlag: 'seenTerminal',
         setFocus: 'terminal',
@@ -708,15 +700,12 @@ const ACTIONS = {
     return {
       msgs: ctx.stage === 'back_room'
         ? [
-            { delay: 800, text: '天井見上げた' },
-            { delay: 2000, text: '配管が走ってる、シミと埃' },
-            { delay: 2200, text: '蛍光灯が時々ちらつく' },
+            { delay: 800, text: '天井' },
+            { delay: 2000, text: '配管、シミ' },
           ]
         : [
-            { delay: 800, text: '天井見上げた' },
-            { delay: 2000, text: '撮った', image: 'U1' },
-            { delay: 2200, text: 'シミだらけ' },
-            { delay: 2000, text: 'なんか変な感じ' },
+            { delay: 800, text: '天井、撮るね' },
+            { delay: 2000, text: '', image: 'U1' },
           ],
     };
   },
@@ -727,8 +716,6 @@ const ACTIONS = {
         msgs: [
           { delay: 700, text: 'カウンターの下、覗き込む' },
           { delay: 2200, text: '撮った', image: 'A8-Counter' },
-          { delay: 2400, text: '古いアンプとCDプレイヤー、配線ぐちゃぐちゃ' },
-          { delay: 2200, text: '電源は切れてる' },
         ],
         setFlag: 'foundBgm',
         setFocus: 'counter_under',
@@ -777,15 +764,14 @@ const ACTIONS = {
   look_left: (ctx) => ({
     msgs: ctx.stage === 'back_room'
       ? [
-          { delay: 700, text: '左の壁見た' },
-          { delay: 2000, text: 'コード表のメモ書きが貼ってある' },
+          { delay: 700, text: '左、メモ書きが貼ってある' },
         ]
       : [
-          { delay: 700, text: '左を見た' },
-          { delay: 2000, text: '鏡があった、撮るね', image: 'L1-1' },
-          { delay: 2400, text: '……何か薄く浮いてる' },
+          { delay: 700, text: '左、撮るね' },
+          { delay: 2000, text: '', image: 'L1-1' },
         ],
     setFlag: ctx.stage !== 'back_room' ? 'seenMirror' : null,
+    setFocus: ctx.stage !== 'back_room' ? 'mirror' : null,
   }),
   look_right: (ctx) => ({
     msgs: ctx.stage === 'back_room'
@@ -806,7 +792,52 @@ const ACTIONS = {
       { delay: 700, text: '洗濯機ね' },
       { delay: 1800, text: '1番、2番、3番、どれにする？' },
     ],
+    setFocus: 'machines_question',
   }),
+  // 数字選択（文脈で何を選んでるか判定）
+  pick_1: (ctx) => {
+    // BGMプリセット選択中
+    if (ctx.flags.bgmPowered && !ctx.flags.alphaPlayed) {
+      return ACTIONS.die_bgm_1 ? ACTIONS.die_bgm_1(ctx) : { msgs: [{ delay: 700, text: '1番' }] };
+    }
+    // 決済端末選択中
+    if (ctx.lastFocus === 'terminal') {
+      return ACTIONS.die_terminal_1 ? ACTIONS.die_terminal_1(ctx) : { msgs: [{ delay: 700, text: '1番' }] };
+    }
+    // それ以外は機械選択
+    return ACTIONS.machine_1(ctx);
+  },
+  pick_2: (ctx) => {
+    if (ctx.flags.bgmPowered && !ctx.flags.alphaPlayed) {
+      return ACTIONS.die_bgm_2 ? ACTIONS.die_bgm_2(ctx) : { msgs: [{ delay: 700, text: '2番' }] };
+    }
+    if (ctx.lastFocus === 'terminal') {
+      return ACTIONS.die_terminal_2 ? ACTIONS.die_terminal_2(ctx) : { msgs: [{ delay: 700, text: '2番' }] };
+    }
+    return ACTIONS.machine_2(ctx);
+  },
+  pick_3: (ctx) => {
+    if (ctx.flags.bgmPowered && !ctx.flags.alphaPlayed) {
+      return ACTIONS.bgm_play_alpha(ctx);
+    }
+    if (ctx.lastFocus === 'terminal') {
+      return ACTIONS.terminal_3(ctx);
+    }
+    return ACTIONS.machine_3(ctx);
+  },
+  pick_4: (ctx) => {
+    if (ctx.flags.bgmPowered && !ctx.flags.alphaPlayed) {
+      return ACTIONS.die_bgm_4 ? ACTIONS.die_bgm_4(ctx) : { msgs: [{ delay: 700, text: '4番' }] };
+    }
+    return { msgs: [{ delay: 700, text: '4番？何を選ぶ？' }] };
+  },
+  // 機械の中身を見る（lastFocusが機械の時）
+  machine_inside: (ctx) => {
+    if (ctx.lastFocus === 'machine_1') return ACTIONS.machine_1(ctx);
+    if (ctx.lastFocus === 'machine_2') return ACTIONS.machine_2(ctx);
+    if (ctx.lastFocus === 'machine_3') return ACTIONS.machine_3(ctx);
+    return { msgs: [{ delay: 700, text: 'どこの中？' }] };
+  },
   machine_1: (ctx) => {
     const layer = ctx.machineLayers['1'];
     if (ctx.foldedMachines.has('1')) {
@@ -936,12 +967,8 @@ const ACTIONS = {
   // カウンター全景（最初に「カウンター」と言われた時の応答）
   counter_general: () => ({
     msgs: [
-      { delay: 700, text: 'カウンターね、撮るね' },
+      { delay: 700, text: 'カウンター、撮るね' },
       { delay: 2200, text: '', image: 'A8-Counter-Front' },
-      { delay: 2400, text: '受付カウンター、両替機とか決済端末がある' },
-      { delay: 2400, text: '料金表、夜間無人の貼り紙' },
-      { delay: 2200, text: 'カウンターの下から、配線がはみ出してる' },
-      { delay: 2200, text: '何か装置あるかも' },
     ],
     setFlag: 'seenCounter',
     setFocus: 'counter',
@@ -951,8 +978,6 @@ const ACTIONS = {
     msgs: [
       { delay: 700, text: 'カウンターの下、覗き込む' },
       { delay: 2200, text: '撮った', image: 'A8-Counter' },
-      { delay: 2400, text: '古いアンプとCDプレイヤー、配線ぐちゃぐちゃ' },
-      { delay: 2200, text: '電源は切れてる' },
     ],
     setFlag: 'foundBgm',
     setFocus: 'counter_under',
@@ -961,27 +986,21 @@ const ACTIONS = {
     msgs: ctx.flags.foundBgm
       ? [
           { delay: 700, text: '電源入れた' },
-          { delay: 2200, text: '画面ついた、プリセット選べる', image: 'A8-Counter-Menu' },
-          { delay: 2400, text: '1. Morning Healing / 432Hz Ambient' },
-          { delay: 2200, text: '2. Relaxation / 528Hz Piano' },
-          { delay: 2200, text: '3. Deep Sleep / 210Hz + 220Hz Binaural' },
-          { delay: 2200, text: '4. Focus Boost / 680Hz High Freq' },
-          { delay: 2400, text: 'どれにする？' },
+          { delay: 2200, text: '', image: 'A8-Counter-Menu' },
         ]
       : [
-          { delay: 700, text: 'まずBGM装置を見つけないと' },
+          { delay: 700, text: 'え、何の？' },
         ],
     setFlag: 'bgmPowered',
+    setFocus: 'bgm_menu',
   }),
   // カウンター上の決済端末
   counter_terminal: () => ({
     msgs: [
-      { delay: 700, text: 'カウンター上の決済端末', image: 'A8-Terminal' },
-      { delay: 2400, text: 'メニュー出てる' },
-      { delay: 2200, text: '1. 決済 / 2. 取消 / 3. 再印字' },
-      { delay: 2200, text: 'どれ押す？' },
+      { delay: 700, text: '決済端末', image: 'A8-Terminal' },
     ],
     setFlag: 'seenTerminal',
+    setFocus: 'terminal',
   }),
   terminal_3: () => ({
     msgs: [
@@ -1186,11 +1205,7 @@ const ACTIONS = {
     return {
       msgs: [
         { delay: 700, text: '……振り向く' },
-        { delay: 2400, text: 'あ' },
-        { delay: 2200, text: 'カウンターがあった', image: 'A8-Counter-Front' },
-        { delay: 2400, text: '受付カウンター、両替機とか決済端末がある' },
-        { delay: 2400, text: 'カウンターの下から、配線がはみ出してる' },
-        { delay: 2200, text: '何か装置あるかも' },
+        { delay: 2400, text: 'カウンターがあった', image: 'A8-Counter-Front' },
       ],
       setFlag: 'seenCounter',
       setFocus: 'counter',
@@ -1298,15 +1313,14 @@ const EXACT_WORD_MAP = {
   '右': 'look_right', 'みぎ': 'look_right',
   '前': 'photo', 'まえ': 'photo', '正面': 'photo',
   '後ろ': 'turn_around', 'うしろ': 'turn_around', '背後': 'turn_around', '振り向く': 'turn_around',
+  '裏': 'machine_back',
+  '中': 'machine_inside',
   // オブジェクト
   '鏡': 'mirror', 'かがみ': 'mirror', 'ミラー': 'mirror',
   '時計': 'clock', 'とけい': 'clock',
   '掲示板': 'board', 'けいじばん': 'board', 'ボード': 'board',
   'カウンター': 'counter_general', '受付': 'counter_general',
   '洗濯機': 'machines_ask', 'せんたくき': 'machines_ask', '機械': 'machines_ask',
-  '1番': 'machine_1', '一番': 'machine_1', '1号機': 'machine_1',
-  '2番': 'machine_2', '二番': 'machine_2', '2号機': 'machine_2',
-  '3番': 'bgm_play_alpha', '三番': 'bgm_play_alpha', '3号機': 'machine_3',  // 注意：BGM選択時優先
   'ドア': 'open_door', 'door': 'open_door', '扉': 'open_door',
   'ギター': 'guitar_take', 'guitar': 'guitar_take',
   'ライト': 'use_light', '明かり': 'use_light', 'light': 'use_light',
@@ -1319,6 +1333,11 @@ const EXACT_WORD_MAP = {
   'きれい': 'compliment', '綺麗': 'compliment',
   // 写真
   '写真': 'photo', '画像': 'photo', '映像': 'photo',
+  // 数字単独（文脈で分岐させる、デフォルトは machine_X だが、bgm_power の後なら BGM選択）
+  '1': 'pick_1', '一': 'pick_1', '1番': 'pick_1', '一番': 'pick_1',
+  '2': 'pick_2', '二': 'pick_2', '2番': 'pick_2', '二番': 'pick_2',
+  '3': 'pick_3', '三': 'pick_3', '3番': 'pick_3', '三番': 'pick_3',
+  '4': 'pick_4', '四': 'pick_4', '4番': 'pick_4', '四番': 'pick_4',
 };
 
 const matchInput = (input, ctx) => {
