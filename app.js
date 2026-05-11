@@ -377,7 +377,7 @@ const DICTIONARY = {
   // ========================================
   'agree': {
     priority: 30,
-    keywords: ['うん', 'はい', 'もちろん', 'わかった', 'わかる', 'わかってる', 'おっけー', 'OK', 'ok', 'Ok', 'いいよ', '了解', 'りょうかい', '任せて', 'まかせて', 'やる', 'やろう', 'やってみる', 'やりましょう', '大丈夫だよ', 'できる', 'いいね', 'ええ'],
+    keywords: ['うん', 'はい', 'もちろん', 'わかった', 'わかる', 'わかってる', 'おっけー', 'OK', 'ok', 'Ok', 'いいよ', '了解', 'りょうかい', '任せて', 'まかせて', 'やる', 'やろう', 'やってみる', 'やりましょう', '大丈夫だよ', 'できる', 'いいね', 'ええ', '取り出', 'とりだ', '取って', 'とって', '出して', 'だして', '中身', '中見', '中を見', '見て', '開けて', '進めて', '続けて', '次', 'お願い', 'おねがい'],
     response: 'agree',
   },
   'disagree': {
@@ -434,7 +434,13 @@ const DICTIONARY = {
 const ACTIONS = {
   // 会話を繋ぐ返答（プレイヤーの汎用的な返答に対する応答）
   agree: (ctx) => {
-    // 状況に応じた応答（焦り＋頼ってる感じ）
+    // 文脈に応じて次のアクションへ
+    // 洗濯機を見てる時の「はい」「取り出す」→ 次のレイヤー
+    if (ctx.lastFocus === 'machine_1') return ACTIONS.machine_1(ctx);
+    if (ctx.lastFocus === 'machine_2') return ACTIONS.machine_2(ctx);
+    if (ctx.lastFocus === 'machine_3') return ACTIONS.machine_3(ctx);
+    
+    // それ以外（一般的な相槌）
     if (ctx.stage === 'back_room') {
       return {
         msgs: [
@@ -443,7 +449,6 @@ const ACTIONS = {
         ],
       };
     }
-    // 第1幕
     return {
       msgs: [
         { delay: 700, text: 'うん' },
@@ -505,11 +510,50 @@ const ACTIONS = {
     msgs: [
       { delay: 700, text: 'スマホはある' },
       { delay: 2000, text: '写真撮って送れる' },
-      { delay: 2200, text: 'ライトもつけられるし' },
-      { delay: 2400, text: 'ポケットに……まあ、色々' },
-      { delay: 2400, text: '何でも頼んで' },
+      { delay: 2200, text: '何でも頼んで' },
     ],
   }),
+  photo: () => ({
+    msgs: [
+      { delay: 700, text: '撮るね' },
+      { delay: 2000, text: '', image: 'A1-1' },
+    ],
+    setFlag: 'seenPhoto',
+  }),
+  selfie: () => ({
+    msgs: [
+      { delay: 700, text: '自撮り？まあいいけど' },
+      { delay: 2000, text: '', image: 'C2-1' },
+    ],
+    setFlag: 'seenSelfie',
+  }),
+  compliment: (ctx) => {
+    const variants = [
+      [
+        { delay: 700, text: 'は？' },
+        { delay: 1800, text: '今そういうのいい' },
+        { delay: 2200, text: '……でもまあ、ありがと' },
+      ],
+      [
+        { delay: 700, text: 'ちょっと' },
+        { delay: 1500, text: '今そんな場合じゃないでしょ' },
+        { delay: 2400, text: '……でも、悪い気はしないけど' },
+      ],
+      [
+        { delay: 700, text: 'え' },
+        { delay: 1200, text: 'なに急に' },
+        { delay: 2200, text: 'やめてよ、こんな状況で' },
+        { delay: 2400, text: '……ばか' },
+      ],
+      [
+        { delay: 700, text: 'ふーん' },
+        { delay: 1500, text: 'そう' },
+        { delay: 2200, text: '別に嬉しくないけど' },
+      ],
+    ];
+    const variant = variants[ctx.tries % variants.length];
+    return { msgs: variant };
+  },
   clock: () => ({
     msgs: [
       { delay: 700, text: '時計、撮るね' },
@@ -644,8 +688,12 @@ const ACTIONS = {
     if (ctx.lastFocus === 'terminal') {
       return ACTIONS.die_terminal_1 ? ACTIONS.die_terminal_1(ctx) : { msgs: [{ delay: 700, text: '1番' }] };
     }
-    // それ以外は機械選択
-    return ACTIONS.machine_1(ctx);
+    // それ以外は機械選択（先に「1番ね」と返事）
+    const m1 = ACTIONS.machine_1(ctx);
+    return {
+      ...m1,
+      msgs: [{ delay: 600, text: '1番ね' }, ...m1.msgs],
+    };
   },
   pick_2: (ctx) => {
     if (ctx.lastFocus === 'bgm_menu' && !ctx.flags.alphaPlayed) {
@@ -654,7 +702,11 @@ const ACTIONS = {
     if (ctx.lastFocus === 'terminal') {
       return ACTIONS.die_terminal_2 ? ACTIONS.die_terminal_2(ctx) : { msgs: [{ delay: 700, text: '2番' }] };
     }
-    return ACTIONS.machine_2(ctx);
+    const m2 = ACTIONS.machine_2(ctx);
+    return {
+      ...m2,
+      msgs: [{ delay: 600, text: '2番ね' }, ...m2.msgs],
+    };
   },
   pick_3: (ctx) => {
     if (ctx.lastFocus === 'bgm_menu' && !ctx.flags.alphaPlayed) {
@@ -663,7 +715,11 @@ const ACTIONS = {
     if (ctx.lastFocus === 'terminal') {
       return ACTIONS.terminal_3(ctx);
     }
-    return ACTIONS.machine_3(ctx);
+    const m3 = ACTIONS.machine_3(ctx);
+    return {
+      ...m3,
+      msgs: [{ delay: 600, text: '3番ね' }, ...m3.msgs],
+    };
   },
   pick_4: (ctx) => {
     if (ctx.lastFocus === 'bgm_menu' && !ctx.flags.alphaPlayed) {
@@ -1524,7 +1580,10 @@ function YukaiLaundromat() {
     setTries(0);
     setExploreStart(null);
     setBackRoomStart(null);
+    setIsTyping(false);
+    setIsLocked(false);
     queueRef.current = [];
+    processingRef.current = false;
   }, []);
 
   // 演出スタイル
