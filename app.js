@@ -651,6 +651,7 @@ const ACTIONS = {
           { delay: 2200, text: 'よく見えない' },
         ],
     setFlag: 'seenMirror',
+    setFocus: 'mirror',
   }),
   mirror_breathe: (ctx) => ({
     msgs: ctx.flags.seenMirror
@@ -663,6 +664,7 @@ const ACTIONS = {
           { delay: 700, text: 'まず鏡を見つけないと' },
         ],
     setFlag: 'breathedOnMirror',
+    setFocus: 'mirror',
   }),
   board: () => ({
     msgs: [
@@ -670,6 +672,7 @@ const ACTIONS = {
       { delay: 2400, text: 'いろいろ貼ってある' },
     ],
     setFlag: 'seenBoard',
+    setFocus: 'board',
   }),
   door_check: () => ({
     msgs: [
@@ -688,34 +691,89 @@ const ACTIONS = {
     ],
   }),
   // 上下左右
-  look_up: () => ({
-    msgs: [
-      { delay: 800, text: '天井見上げた' },
-      { delay: 2000, text: '撮った', image: 'U1' },
-      { delay: 2200, text: 'シミだらけ' },
-      { delay: 2000, text: 'なんか変な感じ' },
-    ],
-  }),
-  look_down: (ctx) => ({
-    msgs: ctx.stage === 'back_room'
-      ? (ctx.flags.lightOn
-          ? [
-              { delay: 700, text: '床に紙がある、明るくなった', image: 'D2' },
-              { delay: 2400, text: '誰かの手記みたい' },
-              { delay: 2200, text: '読んでみて' },
-            ]
-          : [
-              { delay: 700, text: '床に何かある', image: 'D2-Dark' },
-              { delay: 2200, text: '暗くて読めない' },
-              { delay: 2000, text: '明るくしないと' },
-            ])
-      : [
-          { delay: 800, text: '床を見た' },
-          { delay: 2000, text: 'リノリウム、すり減ってる' },
-          { delay: 2200, text: '何か書いてある気がする' },
+  look_up: (ctx) => {
+    // カウンターを見ている時の「上」 → カウンター上の決済端末
+    if (ctx.lastFocus === 'counter' || ctx.lastFocus === 'counter_under') {
+      return {
+        msgs: [
+          { delay: 700, text: 'カウンター上、決済端末' },
+          { delay: 2200, text: '撮った', image: 'A8-Terminal' },
+          { delay: 2400, text: 'メニュー出てる' },
         ],
-    setFlag: ctx.stage === 'back_room' && ctx.flags.lightOn ? 'readMemo' : null,
-  }),
+        setFlag: 'seenTerminal',
+        setFocus: 'terminal',
+      };
+    }
+    // 通常：天井を見る
+    return {
+      msgs: ctx.stage === 'back_room'
+        ? [
+            { delay: 800, text: '天井見上げた' },
+            { delay: 2000, text: '配管が走ってる、シミと埃' },
+            { delay: 2200, text: '蛍光灯が時々ちらつく' },
+          ]
+        : [
+            { delay: 800, text: '天井見上げた' },
+            { delay: 2000, text: '撮った', image: 'U1' },
+            { delay: 2200, text: 'シミだらけ' },
+            { delay: 2000, text: 'なんか変な感じ' },
+          ],
+    };
+  },
+  look_down: (ctx) => {
+    // カウンターを見ている時の「下」 → BGM装置
+    if (ctx.lastFocus === 'counter') {
+      return {
+        msgs: [
+          { delay: 700, text: 'カウンターの下、覗き込む' },
+          { delay: 2200, text: '撮った', image: 'A8-Counter' },
+          { delay: 2400, text: '古いアンプとCDプレイヤー、配線ぐちゃぐちゃ' },
+          { delay: 2200, text: '電源は切れてる' },
+        ],
+        setFlag: 'foundBgm',
+        setFocus: 'counter_under',
+      };
+    }
+    // 鏡を見ている時の「下」 → 鏡の下（壁）
+    if (ctx.lastFocus === 'mirror') {
+      return {
+        msgs: [
+          { delay: 700, text: '鏡の下、覗いてみる' },
+          { delay: 2200, text: '壁、特に何もない' },
+        ],
+      };
+    }
+    // 掲示板を見ている時の「下」 → 掲示板の下
+    if (ctx.lastFocus === 'board') {
+      return {
+        msgs: [
+          { delay: 700, text: '掲示板の下、見てみる' },
+          { delay: 2200, text: '壁、特に何もない' },
+        ],
+      };
+    }
+    // 通常
+    return {
+      msgs: ctx.stage === 'back_room'
+        ? (ctx.flags.lightOn
+            ? [
+                { delay: 700, text: '床に紙がある、明るくなった', image: 'D2' },
+                { delay: 2400, text: '誰かの手記みたい' },
+                { delay: 2200, text: '読んでみて' },
+              ]
+            : [
+                { delay: 700, text: '床に何かある', image: 'D2-Dark' },
+                { delay: 2200, text: '暗くて読めない' },
+                { delay: 2000, text: '明るくしないと' },
+              ])
+        : [
+            { delay: 800, text: '床を見た' },
+            { delay: 2000, text: 'リノリウム、すり減ってる' },
+            { delay: 2200, text: '何か書いてある気がする' },
+          ],
+      setFlag: ctx.stage === 'back_room' && ctx.flags.lightOn ? 'readMemo' : null,
+    };
+  },
   look_left: (ctx) => ({
     msgs: ctx.stage === 'back_room'
       ? [
@@ -774,6 +832,7 @@ const ACTIONS = {
     return {
       msgs: layers[layer] || [{ delay: 700, text: '中身、もう何もない' }],
       incrementMachine: '1',
+      setFocus: 'machine_1',
     };
   },
   machine_2: (ctx) => {
@@ -798,6 +857,7 @@ const ACTIONS = {
     return {
       msgs: layers[layer] || [{ delay: 700, text: '中身、もう何もない' }],
       incrementMachine: '2',
+      setFocus: 'machine_2',
     };
   },
   machine_3: (ctx) => {
@@ -824,10 +884,39 @@ const ACTIONS = {
     return {
       msgs: layers[layer] || [{ delay: 700, text: '中身、もう何もない' }],
       incrementMachine: '3',
+      setFocus: 'machine_3',
     };
   },
   machine_back: (ctx) => {
-    // 「裏を見て」アクション、最後に開けた機械の裏面を見る
+    // 文脈：直前に見ていた機械の裏を見る
+    if (ctx.lastFocus === 'machine_1' || ctx.lastFocus === 'machine_2' || ctx.lastFocus === 'machine_3') {
+      const num = ctx.lastFocus.split('_')[1];
+      return {
+        msgs: [
+          { delay: 700, text: `${num}番機の裏、覗いてみる` },
+          { delay: 2200, text: '配線とパイプ、ホコリだらけ' },
+          { delay: 2400, text: '特に変なものはない' },
+        ],
+      };
+    }
+    // 鏡の裏
+    if (ctx.lastFocus === 'mirror') {
+      return {
+        msgs: [
+          { delay: 700, text: '鏡の裏？' },
+          { delay: 2200, text: '壁に固定されてる、剥がせない' },
+        ],
+      };
+    }
+    // 掲示板の裏
+    if (ctx.lastFocus === 'board') {
+      return {
+        msgs: [
+          { delay: 700, text: '掲示板を一枚ずつめくってみる' },
+          { delay: 2400, text: '裏側、特に何もない' },
+        ],
+      };
+    }
     return {
       msgs: [
         { delay: 700, text: 'どの裏？' },
@@ -852,9 +941,10 @@ const ACTIONS = {
       { delay: 2400, text: '受付カウンター、両替機とか決済端末がある' },
       { delay: 2400, text: '料金表、夜間無人の貼り紙' },
       { delay: 2200, text: 'カウンターの下から、配線がはみ出してる' },
-      { delay: 2200, text: '何か装置あるかも、覗いてみる？' },
+      { delay: 2200, text: '何か装置あるかも' },
     ],
     setFlag: 'seenCounter',
+    setFocus: 'counter',
   }),
   // カウンター下のBGM装置
   counter_under: () => ({
@@ -865,6 +955,7 @@ const ACTIONS = {
       { delay: 2200, text: '電源は切れてる' },
     ],
     setFlag: 'foundBgm',
+    setFocus: 'counter_under',
   }),
   bgm_power: (ctx) => ({
     msgs: ctx.flags.foundBgm
@@ -1099,9 +1190,10 @@ const ACTIONS = {
         { delay: 2200, text: 'カウンターがあった', image: 'A8-Counter-Front' },
         { delay: 2400, text: '受付カウンター、両替機とか決済端末がある' },
         { delay: 2400, text: 'カウンターの下から、配線がはみ出してる' },
-        { delay: 2200, text: '何か装置あるかも、覗いてみる？' },
+        { delay: 2200, text: '何か装置あるかも' },
       ],
       setFlag: 'seenCounter',
+      setFocus: 'counter',
     };
   },
   die_break_mirror: () => ({
@@ -1288,6 +1380,9 @@ function YukaiLaundromat() {
   });
   const [machineLayers, setMachineLayers] = useState({ '1': 0, '2': 0, '3': 0 });
   const [foldedMachines, setFoldedMachines] = useState(new Set());
+  // 文脈：直前に見た対象（カウンター、鏡、掲示板、機械等）
+  // 'counter' | 'mirror' | 'board' | 'machine_1' | 'machine_2' | 'machine_3' | null
+  const [lastFocus, setLastFocus] = useState(null);
 
   // 演出系状態
   const [crisis, setCrisis] = useState(0); // 0=平穏 1=違和感 2=動揺 3=恐怖 4=パニック 5=崩壊
@@ -1393,6 +1488,7 @@ function YukaiLaundromat() {
       machineLayers,
       foldedMachines,
       tries,
+      lastFocus,
     };
     const result = action(ctx);
 
@@ -1401,6 +1497,7 @@ function YukaiLaundromat() {
     if (result.incrementMachine) {
       setMachineLayers((m) => ({ ...m, [result.incrementMachine]: Math.min(3, (m[result.incrementMachine] || 0) + 1) }));
     }
+    if (result.setFocus !== undefined) setLastFocus(result.setFocus);
     if (result.triggerStage) {
       setTimeout(() => {
         setStage(result.triggerStage);
@@ -1408,7 +1505,7 @@ function YukaiLaundromat() {
       }, 1500);
     }
     setTries((t) => t + 1);
-  }, [loopCount, stage, flags, machineLayers, foldedMachines, tries, queueRei]);
+  }, [loopCount, stage, flags, machineLayers, foldedMachines, tries, lastFocus, queueRei]);
 
   // 辞書外のフォールバック応答（プログレス段階に応じて誘導）
   const getFallbackResponse = useCallback((ctx) => {
@@ -1510,7 +1607,7 @@ function YukaiLaundromat() {
     }
     
     const ctx = {
-      loopCount, stage, flags, machineLayers, foldedMachines, tries,
+      loopCount, stage, flags, machineLayers, foldedMachines, tries, lastFocus,
     };
     const actionId = matchInput(text, ctx);
     
@@ -1521,7 +1618,7 @@ function YukaiLaundromat() {
       const fallback = getFallbackResponse(ctx);
       queueRei(fallback);
     }
-  }, [inputText, isLocked, isEnded, loopCount, stage, flags, machineLayers, foldedMachines, tries, executeAction, getFallbackResponse, queueRei]);
+  }, [inputText, isLocked, isEnded, loopCount, stage, flags, machineLayers, foldedMachines, tries, lastFocus, executeAction, getFallbackResponse, queueRei]);
 
   // リセット
   const reset = useCallback(() => {
