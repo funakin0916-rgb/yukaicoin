@@ -745,9 +745,10 @@ const ACTIONS = {
     setFocus: 'machines_question',
   }),
   // 数字選択（文脈で何を選んでるか判定）
+  // 即死扱いは「今まさにそのメニューを見ている時」に限定
   pick_1: (ctx) => {
-    // BGMプリセット選択中
-    if (ctx.flags.bgmPowered && !ctx.flags.alphaPlayed) {
+    // BGMプリセット選択中（lastFocus が bgm_menu の時だけ）
+    if (ctx.lastFocus === 'bgm_menu' && !ctx.flags.alphaPlayed) {
       return ACTIONS.die_bgm_1 ? ACTIONS.die_bgm_1(ctx) : { msgs: [{ delay: 700, text: '1番' }] };
     }
     // 決済端末選択中
@@ -758,7 +759,7 @@ const ACTIONS = {
     return ACTIONS.machine_1(ctx);
   },
   pick_2: (ctx) => {
-    if (ctx.flags.bgmPowered && !ctx.flags.alphaPlayed) {
+    if (ctx.lastFocus === 'bgm_menu' && !ctx.flags.alphaPlayed) {
       return ACTIONS.die_bgm_2 ? ACTIONS.die_bgm_2(ctx) : { msgs: [{ delay: 700, text: '2番' }] };
     }
     if (ctx.lastFocus === 'terminal') {
@@ -767,7 +768,7 @@ const ACTIONS = {
     return ACTIONS.machine_2(ctx);
   },
   pick_3: (ctx) => {
-    if (ctx.flags.bgmPowered && !ctx.flags.alphaPlayed) {
+    if (ctx.lastFocus === 'bgm_menu' && !ctx.flags.alphaPlayed) {
       return ACTIONS.bgm_play_alpha(ctx);
     }
     if (ctx.lastFocus === 'terminal') {
@@ -776,7 +777,7 @@ const ACTIONS = {
     return ACTIONS.machine_3(ctx);
   },
   pick_4: (ctx) => {
-    if (ctx.flags.bgmPowered && !ctx.flags.alphaPlayed) {
+    if (ctx.lastFocus === 'bgm_menu' && !ctx.flags.alphaPlayed) {
       return ACTIONS.die_bgm_4 ? ACTIONS.die_bgm_4(ctx) : { msgs: [{ delay: 700, text: '4番' }] };
     }
     return { msgs: [{ delay: 700, text: '4番？何を選ぶ？' }] };
@@ -1478,81 +1479,27 @@ function YukaiLaundromat() {
 
   // 辞書外のフォールバック応答（プログレス段階に応じて誘導）
   const getFallbackResponse = useCallback((ctx) => {
-    const responses = [];
-    
-    // 第2幕での誘導
-    if (ctx.stage === 'back_room') {
-      if (!ctx.flags.tookGuitar) {
-        responses.push([
-          { delay: 700, text: 'ごめん、よく分からない' },
-          { delay: 2000, text: 'まず、このギター取った方がいいかな' },
-        ]);
-      } else if (!ctx.flags.lightOn) {
-        responses.push([
-          { delay: 700, text: 'えっと……' },
-          { delay: 2000, text: 'ここ、ちょっと暗いね' },
-          { delay: 2200, text: '明るくしてみる？' },
-        ]);
-      } else if (!ctx.flags.readMemo) {
-        responses.push([
-          { delay: 700, text: 'うーん' },
-          { delay: 2000, text: '床、もう一回見てみる？' },
-        ]);
-      } else if (!ctx.flags.tunedGuitar) {
-        responses.push([
-          { delay: 700, text: 'チューニング、合わせないと' },
-          { delay: 2200, text: 'A=440Hzだったよね' },
-        ]);
-      } else {
-        responses.push([
-          { delay: 700, text: '何か、コード弾いてみる？' },
-        ]);
-      }
-    }
-    // 第1幕での誘導
-    else if (!ctx.flags.seenPhoto) {
-      responses.push([
-        { delay: 700, text: 'ごめん、ちょっと分かんない' },
-        { delay: 2200, text: 'とりあえず、店内の写真もう一回見てみる？' },
-      ]);
-    } else if (!ctx.flags.seenMirror) {
-      responses.push([
+    // ヒントを出さずに、淡々と「分からない」「特に何もない」を返す
+    const variants = [
+      [
+        { delay: 700, text: 'ごめん、よく分からない' },
+      ],
+      [
         { delay: 700, text: 'うーん' },
-        { delay: 2000, text: '上下左右、見回してみる？' },
-        { delay: 2400, text: '左に古い鏡がある' },
-      ]);
-    } else if (!ctx.flags.breathedOnMirror) {
-      responses.push([
-        { delay: 700, text: '鏡の文字、もっとはっきり見たいな' },
-        { delay: 2400, text: '息かけたら……出るかも' },
-      ]);
-    } else if (!ctx.flags.foundBgm) {
-      responses.push([
-        { delay: 700, text: '「210と220を合わせて」……' },
-        { delay: 2400, text: '音を流す装置、ないかな' },
-        { delay: 2400, text: 'カウンターの下とか、見てみる？' },
-      ]);
-    } else if (!ctx.flags.bgmPowered) {
-      responses.push([
-        { delay: 700, text: 'BGM装置あった' },
-        { delay: 2200, text: '電源、入れる？' },
-      ]);
-    } else if (!ctx.flags.alphaPlayed) {
-      responses.push([
-        { delay: 700, text: 'プリセット選べる' },
-        { delay: 2400, text: 'レシートの数字と合うやつ、選んでみる？' },
-      ]);
-    } else {
-      responses.push([
-        { delay: 700, text: '奥のドア、開いてる' },
-        { delay: 2200, text: '中、入る？' },
-      ]);
-    }
-    
-    return responses[0] || [
-      { delay: 700, text: 'ごめん、よく分からない' },
-      { delay: 2000, text: 'もう少し具体的に言える？' },
+        { delay: 1500, text: 'それ、どこ？' },
+      ],
+      [
+        { delay: 700, text: 'えっと' },
+        { delay: 1500, text: 'もう一回言って？' },
+      ],
+      [
+        { delay: 700, text: '特に何もない気がする' },
+      ],
+      [
+        { delay: 700, text: 'うん？' },
+      ],
     ];
+    return variants[ctx.tries % variants.length];
   }, []);
 
   // 入力ハンドラ
