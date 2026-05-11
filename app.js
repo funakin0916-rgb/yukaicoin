@@ -1387,12 +1387,21 @@ function YukaiLaundromat() {
               style={msg.isGlitch ? { textShadow: '2px 0 #ff0040, -2px 0 #00d0ff' } : {}}
             >
               {msg.image && (
-                <img
-                  src={getImageUri(msg.image)}
-                  alt=""
-                  className="rounded mb-2 max-w-full"
-                  onError={(e) => { e.target.style.display = 'none'; }}
-                />
+                <div className="mb-2">
+                  <img
+                    src={getImageUri(msg.image)}
+                    alt={msg.image || 'image'}
+                    className="rounded max-w-full"
+                    onError={(e) => {
+                      const fallback = e.target.nextSibling;
+                      if (fallback) fallback.style.display = 'block';
+                      e.target.style.display = 'none';
+                    }}
+                  />
+                  <div style={{ display: 'none' }} className="text-xs text-yellow-400 p-2 bg-gray-800 rounded">
+                    [画像読込失敗: {msg.image}]
+                  </div>
+                </div>
               )}
               {msg.text}
             </div>
