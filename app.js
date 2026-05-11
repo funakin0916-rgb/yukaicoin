@@ -42,6 +42,7 @@ const IMAGE_URIS = {
   // カウンター
   'A8-Counter': './images/A8-Counter.webp',
   'A8-Counter-Menu': './images/A8-Counter-Menu.webp',
+  'A8-Counter-Front': './images/A8-Counter-Front.webp',
   'A8-Terminal': './images/A8-Terminal.webp',
   'A8-Receipt': './images/A8-Receipt.webp',
   // 鏡（2段階）
@@ -246,6 +247,11 @@ const DICTIONARY = {
     priority: 75,
     keywords: ['カウンター下', 'カウンターの下', 'カウンター裏', 'カウンターのした', '受付下', '受付の下', 'カウンター内', 'カウンター中', 'カウンター内部', 'カウンター覗', '受付覗'],
     response: 'counter_under',
+  },
+  'counter_general': {
+    priority: 55,
+    keywords: ['カウンター', '受付', 'カウンタ', 'うけつけ', '受付台'],
+    response: 'counter_general',
   },
   
   // ========================================
@@ -811,6 +817,18 @@ const ACTIONS = {
       ],
     };
   },
+  // カウンター全景（最初に「カウンター」と言われた時の応答）
+  counter_general: () => ({
+    msgs: [
+      { delay: 700, text: 'カウンターね、撮るね' },
+      { delay: 2200, text: '', image: 'A8-Counter-Front' },
+      { delay: 2400, text: '受付カウンター、両替機とか決済端末がある' },
+      { delay: 2400, text: '料金表、夜間無人の貼り紙' },
+      { delay: 2200, text: 'カウンターの下から、配線がはみ出してる' },
+      { delay: 2200, text: '何か装置あるかも、覗いてみる？' },
+    ],
+    setFlag: 'seenCounter',
+  }),
   // カウンター下のBGM装置
   counter_under: () => ({
     msgs: [
