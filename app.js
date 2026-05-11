@@ -90,7 +90,8 @@ const INITIAL_MESSAGES = [
   { delay: 2200, text: 'なぜか君だけ繋がる' },
   { delay: 2000, text: 'とりあえず、店の中の写真送るね' },
   { delay: 2400, text: '撮った、見て', image: 'A1-1' },
-  { delay: 2400, text: 'こんな感じ' },
+  { delay: 2400, text: '今は洗濯機の方を向いて立ってる' },
+  { delay: 2400, text: '後ろにはカウンター、左に鏡、右に入口' },
   { delay: 2200, text: '何か気付いたら言って' },
 ];
 
@@ -112,10 +113,10 @@ const DICTIONARY = {
   // ========================================
   // 即死パターン（最優先、誤検知防止のため厳しめキーワード）
   // ========================================
-  'die_turn_around': {
+  'turn_around': {
     priority: 100,
-    keywords: ['振り向', 'ふりむ', '振り返', 'ふりかえ', 'うしろ見', '後ろ見', '背後見', '後ろ向', '後方確認', '後ろ確認'],
-    response: 'die_turn_around',
+    keywords: ['振り向', 'ふりむ', '振り返', 'ふりかえ', 'うしろ見', '後ろ見', '背後見', '後ろ向', '後方確認', '後ろ確認', '反対向', '反対側', 'うしろ向'],
+    response: 'turn_around',
   },
   'die_break_mirror': {
     priority: 100,
@@ -1054,15 +1055,32 @@ const ACTIONS = {
     ],
     triggerStage: 'end_bad_b',
   }),
-  die_turn_around: () => ({
-    msgs: [
-      { delay: 700, text: '……振り向く' },
-      { delay: 2400, text: 'ｱ', isGlitch: true },
-      { delay: 2400, text: 'ｱｱｱｱ', isGlitch: true },
-      { delay: 2400, text: 'ﾐﾗﾚﾀ', isGlitch: true, isFading: true },
-    ],
-    triggerStage: 'end_bad_b',
-  }),
+  turn_around: (ctx) => {
+    // 第2幕（奥の部屋）では即死
+    if (ctx.stage === 'back_room') {
+      return {
+        msgs: [
+          { delay: 700, text: '……振り向く' },
+          { delay: 2400, text: 'ｱ', isGlitch: true },
+          { delay: 2400, text: 'ｱｱｱｱ', isGlitch: true },
+          { delay: 2400, text: 'ﾐﾗﾚﾀ', isGlitch: true, isFading: true },
+        ],
+        triggerStage: 'end_bad_b',
+      };
+    }
+    // 第1幕では振り向いてカウンター発見
+    return {
+      msgs: [
+        { delay: 700, text: '……振り向く' },
+        { delay: 2400, text: 'あ' },
+        { delay: 2200, text: 'カウンターがあった', image: 'A8-Counter-Front' },
+        { delay: 2400, text: '受付カウンター、両替機とか決済端末がある' },
+        { delay: 2400, text: 'カウンターの下から、配線がはみ出してる' },
+        { delay: 2200, text: '何か装置あるかも、覗いてみる？' },
+      ],
+      setFlag: 'seenCounter',
+    };
+  },
   die_break_mirror: () => ({
     msgs: [
       { delay: 700, text: '鏡を割る' },
