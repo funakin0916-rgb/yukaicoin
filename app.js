@@ -83,16 +83,13 @@ const getReiAvatar = (expression) => `C1-${expression}`;
 // =============================================================================
 
 const INITIAL_MESSAGES = [
-  { delay: 800, text: '変な質問していい？' },
-  { delay: 2200, text: 'コインランドリーから出られない' },
-  { delay: 2400, text: '時計が2:14で止まってる、外の街灯も消えてる' },
-  { delay: 2400, text: '110番繋がらない、家族のLINEも既読つかない' },
-  { delay: 2200, text: 'なぜか君だけ繋がる' },
-  { delay: 2000, text: 'とりあえず、店の中の写真送るね' },
-  { delay: 2400, text: '撮った、見て', image: 'A1-1' },
-  { delay: 2400, text: '今は洗濯機の方を向いて立ってる' },
-  { delay: 2400, text: '後ろにはカウンター、左に鏡、右に入口' },
-  { delay: 2200, text: '何か気付いたら言って' },
+  { delay: 800, text: 'ちょっといい？' },
+  { delay: 2000, text: 'コインランドリーから出られなくなった' },
+  { delay: 2400, text: '時計2:14で止まってるし、外も真っ暗' },
+  { delay: 2400, text: '誰にも連絡つかない、君だけ繋がる' },
+  { delay: 2000, text: 'とりあえず写真送るね', image: 'A1-1' },
+  { delay: 2400, text: '今、洗濯機の方向いてる。後ろカウンター、左に鏡' },
+  { delay: 2200, text: '何か気付いたら教えて' },
 ];
 
 // =============================================================================
@@ -421,25 +418,25 @@ const ACTIONS = {
       if (!ctx.flags.tookGuitar) {
         return {
           msgs: [
-            { delay: 700, text: 'うん、ありがとう' },
-            { delay: 2200, text: 'まず、このギターを取った方がいいかな' },
+            { delay: 700, text: 'うん、サンキュ' },
+            { delay: 2200, text: 'とりあえずこのギター、取ろっか' },
           ],
         };
       }
       if (!ctx.flags.readMemo) {
         return {
           msgs: [
-            { delay: 700, text: 'うん、暗いね' },
-            { delay: 2200, text: '床に何か落ちてる気がする' },
-            { delay: 2400, text: '明るくして、見ようかな' },
+            { delay: 700, text: 'うん、にしても暗いね' },
+            { delay: 2200, text: '床に何か落ちてる気がするんだけど' },
+            { delay: 2400, text: '明るくしないと見えないな' },
           ],
         };
       }
       return {
         msgs: [
-          { delay: 700, text: 'うん、頭の整理する' },
-          { delay: 2200, text: '篠田……チューニング担当だった' },
-          { delay: 2400, text: '私、何すればいいかな？' },
+          { delay: 700, text: 'うん、ちょっと整理させて' },
+          { delay: 2200, text: '篠田って人、チューニング担当だったみたい' },
+          { delay: 2400, text: '私、何すればいいかな' },
         ],
       };
     }
@@ -447,33 +444,32 @@ const ACTIONS = {
     if (!ctx.flags.seenMirror && !ctx.flags.foundBgm) {
       return {
         msgs: [
-          { delay: 700, text: 'ありがとう' },
-          { delay: 2200, text: '何かヒント、欲しいな' },
-          { delay: 2400, text: '上下左右、見てみる？' },
-          { delay: 2200, text: '掲示板とか、機械とかも気になる' },
+          { delay: 700, text: 'ありがと' },
+          { delay: 2200, text: 'なんかヒントほしいなぁ' },
+          { delay: 2400, text: 'とりあえずあちこち見てみる？' },
         ],
       };
     }
     if (ctx.flags.alphaPlayed && ctx.stage !== 'back_room') {
       return {
         msgs: [
-          { delay: 700, text: 'うん、奥のドア開いた' },
-          { delay: 2200, text: '中、入る？' },
+          { delay: 700, text: 'うん、奥のドア開いてる' },
+          { delay: 2200, text: '入っちゃう？' },
         ],
       };
     }
     return {
       msgs: [
-        { delay: 700, text: 'うん、続けよう' },
-        { delay: 2000, text: '何か気になることある？' },
+        { delay: 700, text: 'うん、続けよ' },
+        { delay: 2000, text: '何か気になるとこある？' },
       ],
     };
   },
   disagree: () => ({
     msgs: [
       { delay: 700, text: 'そっか' },
-      { delay: 2000, text: 'でも一緒に考えてくれるだけで、助かる' },
-      { delay: 2400, text: 'まず何できるか、整理する？' },
+      { delay: 2000, text: 'でも一緒に考えてくれるだけで助かる' },
+      { delay: 2400, text: 'まず何できるか、整理しよっか' },
     ],
   }),
   hint_request: (ctx) => {
@@ -482,8 +478,8 @@ const ACTIONS = {
       if (!ctx.flags.tookGuitar) {
         return {
           msgs: [
-            { delay: 700, text: 'ヒント……' },
-            { delay: 2200, text: 'ここ、奥の部屋。ギターが立てかけてある' },
+            { delay: 700, text: 'えーっと' },
+            { delay: 2200, text: 'ここ奥の部屋。ギター立てかけてあるよ' },
             { delay: 2400, text: '取ってみる？' },
           ],
         };
@@ -491,9 +487,9 @@ const ACTIONS = {
       if (!ctx.flags.lightOn) {
         return {
           msgs: [
-            { delay: 700, text: 'ヒント……' },
-            { delay: 2200, text: 'ここ、ちょっと暗い' },
-            { delay: 2400, text: 'スマホのライト、つけられる？' },
+            { delay: 700, text: 'うーん' },
+            { delay: 2200, text: 'ここ、暗くて見にくいんだよね' },
+            { delay: 2400, text: 'スマホのライトつけられる？' },
           ],
         };
       }
@@ -501,23 +497,23 @@ const ACTIONS = {
         return {
           msgs: [
             { delay: 700, text: '床、もう一回見てみる？' },
-            { delay: 2200, text: '何か紙が落ちてる気がする' },
+            { delay: 2200, text: '何か紙が落ちてる気がするんだよね' },
           ],
         };
       }
       if (!ctx.flags.tunedGuitar) {
         return {
           msgs: [
-            { delay: 700, text: '……篠田、チューニング担当だった' },
+            { delay: 700, text: '篠田、チューニング担当だったらしい' },
             { delay: 2200, text: 'チューナーは「A=440Hz」で固まってた' },
-            { delay: 2400, text: 'ギター、合わせてみる？' },
+            { delay: 2400, text: 'ギター合わせてみる？' },
           ],
         };
       }
       return {
         msgs: [
-          { delay: 700, text: 'チューニング、合った' },
-          { delay: 2200, text: '何かコード、弾いてみる？' },
+          { delay: 700, text: 'チューニングできた' },
+          { delay: 2200, text: '何かコード弾いてみる？' },
         ],
       };
     }
@@ -525,25 +521,25 @@ const ACTIONS = {
     if (!ctx.flags.seenPhoto) {
       return {
         msgs: [
-          { delay: 700, text: 'まず、店内を見てみよう' },
-          { delay: 2200, text: '「写真撮って」って言ってくれれば、送るよ' },
+          { delay: 700, text: 'まず店内見てみよっか' },
+          { delay: 2200, text: '「写真」って言ってくれれば送るよ' },
         ],
       };
     }
     if (!ctx.flags.seenMirror) {
       return {
         msgs: [
-          { delay: 700, text: 'ヒント……' },
+          { delay: 700, text: 'えーっと' },
           { delay: 2200, text: '上下左右、見回してみる？' },
-          { delay: 2400, text: '壁に古い鏡があるよ' },
+          { delay: 2400, text: '左に古い鏡あるよ' },
         ],
       };
     }
     if (!ctx.flags.breathedOnMirror && ctx.flags.seenMirror) {
       return {
         msgs: [
-          { delay: 700, text: '鏡、薄っすら文字が浮かんでる' },
-          { delay: 2400, text: 'もっとはっきり見るには……息かけてみる？' },
+          { delay: 700, text: '鏡、薄っすら文字浮かんでる' },
+          { delay: 2400, text: 'もっとはっきり見るには…息かける？' },
         ],
       };
     }
@@ -551,25 +547,25 @@ const ACTIONS = {
       return {
         msgs: [
           { delay: 700, text: '210と220Hzを合わせる、って書いてあった' },
-          { delay: 2400, text: '音を流す装置、ない？' },
-          { delay: 2400, text: 'カウンターの下とか、探してみて' },
+          { delay: 2400, text: '音を流す装置、ないかな' },
+          { delay: 2400, text: 'カウンターの下、探してみる？' },
         ],
       };
     }
     if (!ctx.flags.bgmPowered) {
       return {
         msgs: [
-          { delay: 700, text: 'BGM装置、見つけた' },
-          { delay: 2400, text: '電源、入れてみる？' },
+          { delay: 700, text: 'BGM装置あった' },
+          { delay: 2400, text: '電源、入れる？' },
         ],
       };
     }
     if (!ctx.flags.alphaPlayed) {
       return {
         msgs: [
-          { delay: 700, text: 'プリセット、選べる' },
-          { delay: 2400, text: 'レシートの「2ch L/R別」「±10Hz」と合うもの' },
-          { delay: 2400, text: '3番のDeep Sleepかな？' },
+          { delay: 700, text: 'プリセット選べる' },
+          { delay: 2400, text: 'レシートの数字と合うやつ選んでみよう' },
+          { delay: 2400, text: '多分3番のDeep Sleepかな' },
         ],
       };
     }
