@@ -291,6 +291,11 @@ const DICTIONARY = {
     keywords: ['自撮り', '自分撮', '自分の写真', 'セルフィー', 'selfie', '玲の写真', '玲を見', '自分の顔', 'じぶん', 'ジブン'],
     response: 'selfie',
   },
+  'compliment': {
+    priority: 95,
+    keywords: ['かわいい', 'カワイイ', 'かわいいね', '可愛い', '可愛いね', 'きれい', '綺麗', 'キレイ', '美人', 'びじん', 'タイプ', '好み', '好きなタイプ', '美しい', 'うつくしい', '魅力', 'お洒落', 'おしゃれ', 'オシャレ', 'かっこいい', 'カッコイイ', 'cute'],
+    response: 'compliment',
+  },
   'clock': {
     priority: 65,
     keywords: ['時計', 'とけい', '時間確認', '何時', '時刻', '時計見', '時計撮', '時計確認', '時計の写真', '時間見', '2:14', '02:14', '2時14分', '針', '長針', '短針'],
@@ -596,6 +601,35 @@ const ACTIONS = {
     ],
     setFlag: 'seenSelfie',
   }),
+  compliment: (ctx) => {
+    // ツンデレ複数バリエーション
+    const variants = [
+      [
+        { delay: 700, text: 'は？' },
+        { delay: 1800, text: '今そういうのいい' },
+        { delay: 2200, text: '……でもまあ、ありがと' },
+      ],
+      [
+        { delay: 700, text: 'ちょっと' },
+        { delay: 1500, text: '今そんな場合じゃないでしょ' },
+        { delay: 2400, text: '……でも、悪い気はしないけど' },
+      ],
+      [
+        { delay: 700, text: 'え' },
+        { delay: 1200, text: 'なに急に' },
+        { delay: 2200, text: 'やめてよ、こんな状況で' },
+        { delay: 2400, text: '……ばか' },
+      ],
+      [
+        { delay: 700, text: 'ふーん' },
+        { delay: 1500, text: 'そう' },
+        { delay: 2200, text: '別に嬉しくないけど' },
+        { delay: 2000, text: 'まあ、覚えとく' },
+      ],
+    ];
+    const variant = variants[ctx.tries % variants.length];
+    return { msgs: variant };
+  },
   clock: () => ({
     msgs: [
       { delay: 700, text: '撮った', image: 'A1-Clock' },
@@ -709,6 +743,12 @@ const ACTIONS = {
         ],
   }),
   // 機械
+  machines_ask: () => ({
+    msgs: [
+      { delay: 700, text: '洗濯機ね' },
+      { delay: 1800, text: '1番、2番、3番、どれにする？' },
+    ],
+  }),
   machine_1: (ctx) => {
     const layer = ctx.machineLayers['1'];
     if (ctx.foldedMachines.has('1')) {
@@ -1156,10 +1196,48 @@ const TIMEOUT_WARNINGS = {
 // =============================================================================
 // 入力 → アクション マッチング関数
 // =============================================================================
+// 完全一致用：短い単語入力に対応
+// プレイヤーが「上」「左」「鏡」だけで送ってきても拾う
+const EXACT_WORD_MAP = {
+  // 方向
+  '上': 'look_up', 'うえ': 'look_up', '天井': 'look_up', 'てんじょう': 'look_up',
+  '下': 'look_down', 'した': 'look_down', '床': 'look_down', 'ゆか': 'look_down', '足元': 'look_down',
+  '左': 'look_left', 'ひだり': 'look_left',
+  '右': 'look_right', 'みぎ': 'look_right',
+  '前': 'photo', 'まえ': 'photo', '正面': 'photo',
+  '後ろ': 'turn_around', 'うしろ': 'turn_around', '背後': 'turn_around', '振り向く': 'turn_around',
+  // オブジェクト
+  '鏡': 'mirror', 'かがみ': 'mirror', 'ミラー': 'mirror',
+  '時計': 'clock', 'とけい': 'clock',
+  '掲示板': 'board', 'けいじばん': 'board', 'ボード': 'board',
+  'カウンター': 'counter_general', '受付': 'counter_general',
+  '洗濯機': 'machines_ask', 'せんたくき': 'machines_ask', '機械': 'machines_ask',
+  '1番': 'machine_1', '一番': 'machine_1', '1号機': 'machine_1',
+  '2番': 'machine_2', '二番': 'machine_2', '2号機': 'machine_2',
+  '3番': 'bgm_play_alpha', '三番': 'bgm_play_alpha', '3号機': 'machine_3',  // 注意：BGM選択時優先
+  'ドア': 'open_door', 'door': 'open_door', '扉': 'open_door',
+  'ギター': 'guitar_take', 'guitar': 'guitar_take',
+  'ライト': 'use_light', '明かり': 'use_light', 'light': 'use_light',
+  'チューナー': 'tune_guitar', 'tuner': 'tune_guitar',
+  // BGM
+  'BGM': 'bgm_power', 'bgm': 'bgm_power',
+  // 反応
+  '自撮り': 'selfie',
+  'かわいい': 'compliment', '可愛い': 'compliment', 'カワイイ': 'compliment',
+  'きれい': 'compliment', '綺麗': 'compliment',
+  // 写真
+  '写真': 'photo', '画像': 'photo', '映像': 'photo',
+};
+
 const matchInput = (input, ctx) => {
   const normalized = input.toLowerCase().trim();
   
-  // 優先度順 + キーワード長さ降順でソート（より具体的なマッチを優先）
+  // 1. 完全一致チェック（短い単語のみ）
+  if (EXACT_WORD_MAP[normalized] || EXACT_WORD_MAP[input.trim()]) {
+    return EXACT_WORD_MAP[normalized] || EXACT_WORD_MAP[input.trim()];
+  }
+  
+  // 2. 優先度順 + キーワード長さ降順でソート（より具体的なマッチを優先）
   const candidates = [];
   for (const [key, entry] of Object.entries(DICTIONARY)) {
     for (const kw of entry.keywords) {
