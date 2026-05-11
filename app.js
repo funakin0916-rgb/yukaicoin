@@ -88,7 +88,7 @@ const FIRST_CONTACT_MESSAGES = [
   { delay: 1200, text: '繋がった！' },
   { delay: 1500, text: 'よかった、よかった' },
   { delay: 2200, text: 'ねえ、コインランドリーから出られないの' },
-  { delay: 2400, text: '誰にも連絡つかない、君だけ繋がってる' },
+  { delay: 2400, text: '誰にも連絡つかない、あなただけ繋がってる' },
   { delay: 2400, text: '助けて、お願い' },
 ];
 
@@ -498,7 +498,7 @@ const ACTIONS = {
       { delay: 600, text: '篠崎玲、26歳' },
       { delay: 2000, text: 'フリーのグラフィックデザイナー' },
       { delay: 2200, text: '今、コインランドリーで閉じ込められてる' },
-      { delay: 2400, text: '君は？……ううん、それより助けて' },
+      { delay: 2400, text: 'あなたは？……ううん、それより助けて' },
     ],
   }),
   capabilities: () => ({
@@ -1018,25 +1018,49 @@ const ACTIONS = {
     msgs: [
       { delay: 700, text: '1番、Morning Healing' },
       { delay: 2200, text: '432Hz、明るい音' },
-      { delay: 2400, text: '……何も起きない' },
-      { delay: 2200, text: 'これじゃないかも' },
+      { delay: 2400, text: '……あれ、空気が' },
+      { delay: 2400, text: '何か、ザワッと' },
+      // 怪異①の声（震える赤いテキスト）「チガウ」の連呼
+      { delay: 3500, text: 'ﾁ ｶﾞ ｳ', isGlitch: true, isGhost: true },
+      { delay: 2800, text: 'ﾁ ｶﾞ ｳ', isGlitch: true, isGhost: true },
+      { delay: 2500, text: 'ﾁ ｶﾞ ｳ  ﾁ ｶﾞ ｳ', isGlitch: true, isGhost: true },
+      { delay: 2500, text: 'ﾁｶﾞｳﾁｶﾞｳﾁｶﾞｳ', isGlitch: true, isGhost: true },
+      { delay: 3000, text: '止まらない、止まらない' },
+      { delay: 2400, text: 'あ──', isGlitch: true, isFading: true },
     ],
+    triggerStage: 'end_bad_a',
   }),
   die_bgm_2: () => ({
     msgs: [
       { delay: 700, text: '2番、Relaxation' },
       { delay: 2200, text: '528Hz、ピアノの音' },
-      { delay: 2400, text: '……変化ない' },
-      { delay: 2200, text: 'これも違う' },
+      { delay: 2400, text: '……何か、おかしい' },
+      { delay: 2400, text: '空気が、ザワッと' },
+      // 怪異①の声「チガウ」
+      { delay: 3500, text: 'ﾁ ｶﾞ ｳ', isGlitch: true, isGhost: true },
+      { delay: 2800, text: 'ﾁ ｶﾞ ｳ', isGlitch: true, isGhost: true },
+      { delay: 2500, text: 'ﾁ ｶﾞ ｳ  ﾁ ｶﾞ ｳ', isGlitch: true, isGhost: true },
+      { delay: 2500, text: 'ﾁｶﾞｳﾁｶﾞｳﾁｶﾞｳ', isGlitch: true, isGhost: true },
+      { delay: 3000, text: '止まらない、止まらない' },
+      { delay: 2400, text: 'あ──', isGlitch: true, isFading: true },
     ],
+    triggerStage: 'end_bad_a',
   }),
   die_bgm_4: () => ({
     msgs: [
       { delay: 700, text: '4番、Focus Boost' },
       { delay: 2200, text: '680Hz、高い音' },
-      { delay: 2400, text: '耳が痛い、これ違う' },
-      { delay: 2200, text: '止めた' },
+      { delay: 2400, text: '耳に刺さる' },
+      { delay: 2400, text: '空気が、ザワッと' },
+      // 怪異①の声「チガウ」
+      { delay: 3500, text: 'ﾁ ｶﾞ ｳ', isGlitch: true, isGhost: true },
+      { delay: 2800, text: 'ﾁ ｶﾞ ｳ', isGlitch: true, isGhost: true },
+      { delay: 2500, text: 'ﾁ ｶﾞ ｳ  ﾁ ｶﾞ ｳ', isGlitch: true, isGhost: true },
+      { delay: 2500, text: 'ﾁｶﾞｳﾁｶﾞｳﾁｶﾞｳ', isGlitch: true, isGhost: true },
+      { delay: 3000, text: '止まらない、止まらない' },
+      { delay: 2400, text: 'あ──', isGlitch: true, isFading: true },
     ],
+    triggerStage: 'end_bad_a',
   }),
   die_wrong_chord: () => ({
     msgs: [
@@ -1157,7 +1181,7 @@ const TIMEOUT_WARNINGS = {
   mid: [ // 3:30 (210秒経過)
     { delay: 1000, text: '頭、おかしい' },
     { delay: 2200, text: '視界がチカチカしてる' },
-    { delay: 2400, text: '君、急いで' },
+    { delay: 2400, text: 'あなた、急いで' },
   ],
   late: [ // 4:00 (240秒経過)
     { delay: 1000, text: 'お願い、何か思いついて' },
@@ -1168,14 +1192,14 @@ const TIMEOUT_WARNINGS = {
     { delay: 1000, text: 'ねぇ! 助けて!' },
     { delay: 2200, text: '来る、何か来てる' },
     { delay: 2400, text: '振り向きたくない、振り向きたくない' },
-    { delay: 2400, text: '君、いるよね? いるよね??' },
+    { delay: 2400, text: 'あなた、いるよね? いるよね??' },
   ],
   collapse: [ // 4:45 (285秒経過)
     { delay: 1000, text: 'ｲﾔﾀﾞ ｲﾔﾀﾞ ｺﾅｲﾃﾞ', isGlitch: true },
     { delay: 2200, text: 'ﾀｽｹﾃ ｵﾈｶﾞｲ', isGlitch: true },
   ],
   back_panic: [ // 第2幕 4:00
-    { delay: 1000, text: '君、また?' },
+    { delay: 1000, text: 'あなた、また?' },
     { delay: 2200, text: '死にたくない、絶対' },
     { delay: 2400, text: 'ｺﾞﾒﾝ ｵﾈｶﾞｲ ｲﾔﾀﾞ', isGlitch: true },
   ],
