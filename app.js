@@ -682,17 +682,18 @@ const ACTIONS = {
     }
     const layers = [
       [
-        { delay: 700, text: '左の洗濯機、回ってる' },
-        { delay: 2000, text: '高校のジャージ、3年A組のゼッケン' },
-        { delay: 2200, text: 'もっと探る？' },
+        { delay: 700, text: '左の洗濯機、止まってる' },
+        { delay: 2000, text: '中に洗濯物が入ったまま' },
+        { delay: 2200, text: '取り出す？' },
+      ],
+      [
+        { delay: 700, text: '取り出した' },
+        { delay: 2000, text: 'ジャージ、3年A組のゼッケン' },
+        { delay: 2200, text: 'ポケットに何かある' },
       ],
       [
         { delay: 700, text: 'ポケット探る' },
-        { delay: 2000, text: 'チューナーが出てきた', image: 'B1-Tuner' },
-      ],
-      [
-        { delay: 700, text: 'もっと深く見る' },
-        { delay: 2200, text: '楽譜の切れ端', image: 'B1-3' },
+        { delay: 2000, text: 'チューナー', image: 'B1-Tuner' },
       ],
     ];
     return {
@@ -708,16 +709,18 @@ const ACTIONS = {
     }
     const layers = [
       [
-        { delay: 700, text: '真ん中の洗濯機、回ってる' },
-        { delay: 2000, text: 'ヨガパンツ、汗の匂い' },
-        { delay: 2200, text: 'もっと探る？' },
+        { delay: 700, text: '真ん中の洗濯機、止まってる' },
+        { delay: 2000, text: '中に洗濯物' },
+        { delay: 2200, text: '取り出す？' },
       ],
       [
-        { delay: 700, text: 'ポケット' },
-        { delay: 2000, text: 'イヤホンと、しおり' },
+        { delay: 700, text: '取り出した' },
+        { delay: 2000, text: 'ヨガウェア、ラベンダーの香り' },
+        { delay: 2200, text: 'ポケットに何か' },
       ],
       [
-        { delay: 700, text: 'しおりを撮った', image: 'B2-3' },
+        { delay: 700, text: 'しおり、出てきた' },
+        { delay: 2200, text: '', image: 'B2-3' },
       ],
     ];
     return {
@@ -733,13 +736,14 @@ const ACTIONS = {
     }
     const layers = [
       [
-        { delay: 700, text: '右の洗濯機、回ってる' },
-        { delay: 2000, text: 'スーツのジャケット' },
-        { delay: 2200, text: 'もっと探る？' },
+        { delay: 700, text: '右の洗濯機、止まってる' },
+        { delay: 2000, text: '中に洗濯物' },
+        { delay: 2200, text: '取り出す？' },
       ],
       [
-        { delay: 700, text: '内ポケット、名刺' },
-        { delay: 2200, text: 'よく読めない、苗字だけ' },
+        { delay: 700, text: '取り出した' },
+        { delay: 2000, text: 'スーツのジャケット' },
+        { delay: 2200, text: '内ポケットに名刺' },
       ],
       [
         { delay: 700, text: '名刺の裏', image: 'B3-3-α' },
@@ -869,7 +873,7 @@ const ACTIONS = {
     msgs: [
       { delay: 700, text: '3番押した、再印字' },
       { delay: 2200, text: 'レシート出てきた', image: 'A8-Receipt' },
-      { delay: 2400, text: '何か書いてある' },
+      { delay: 2400, text: '……BGMサーバー、カウンター下、って書いてある' },
     ],
     setFlag: 'gotReceipt',
   }),
