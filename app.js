@@ -83,10 +83,10 @@ const INITIAL_MESSAGES = [];
 const FIRST_CONTACT_MESSAGES = [
   { delay: 600, text: 'あ' },
   { delay: 1200, text: '繋がった！' },
-  { delay: 2000, text: 'よかった……' },
-  { delay: 2200, text: 'コインランドリーから出られなくなって' },
-  { delay: 2400, text: '誰にも連絡つかなかった' },
-  { delay: 2200, text: '助けて' },
+  { delay: 1500, text: 'よかった、よかった' },
+  { delay: 2200, text: 'ねえ、コインランドリーから出られないの' },
+  { delay: 2400, text: '誰にも連絡つかない、君だけ繋がってる' },
+  { delay: 2400, text: '助けて、お願い' },
 ];
 
 // =============================================================================
@@ -405,6 +405,17 @@ const DICTIONARY = {
   // ========================================
   // 雑談・無関係
   // ========================================
+  // 自己紹介・能力確認
+  'self_intro': {
+    priority: 92,
+    keywords: ['誰', 'だれ', '名前', '何者', 'なまえ', '君は', 'あなたは', 'あなた誰', '君誰', 'お名前', '自己紹介'],
+    response: 'self_intro',
+  },
+  'capabilities': {
+    priority: 92,
+    keywords: ['何ができる', 'できること', 'なにできる', '何できる', '何持って', '何ある', '装備', 'なに持って', '持ち物', '何か持って', '何ができ'],
+    response: 'capabilities',
+  },
   'chitchat': {
     priority: 20,
     keywords: ['こんばんは', 'おはよう', 'よろしく', 'はじめまして', 'なんで', 'なぜ', 'どう思う', 'お疲れ', 'おつかれ', 'ありがとう', 'ありがと', 'すごい', 'すげー', 'すげぇ', 'マジ', 'まじ', '本当', 'ほんと'],
@@ -420,185 +431,35 @@ const DICTIONARY = {
 const ACTIONS = {
   // 会話を繋ぐ返答（プレイヤーの汎用的な返答に対する応答）
   agree: (ctx) => {
-    // 状況に応じてヒントを出す
+    // 状況に応じた応答（焦り＋頼ってる感じ）
     if (ctx.stage === 'back_room') {
-      if (!ctx.flags.tookGuitar) {
-        return {
-          msgs: [
-            { delay: 700, text: 'うん、サンキュ' },
-            { delay: 2200, text: 'とりあえずこのギター、取ろっか' },
-          ],
-        };
-      }
-      if (!ctx.flags.readMemo) {
-        return {
-          msgs: [
-            { delay: 700, text: 'うん、にしても暗いね' },
-            { delay: 2200, text: '床に何か落ちてる気がするんだけど' },
-            { delay: 2400, text: '明るくしないと見えないな' },
-          ],
-        };
-      }
       return {
         msgs: [
-          { delay: 700, text: 'うん、ちょっと整理させて' },
-          { delay: 2200, text: '篠田って人、チューニング担当だったみたい' },
-          { delay: 2400, text: '私、何すればいいかな' },
+          { delay: 700, text: 'うん' },
+          { delay: 1800, text: 'どうしたらいい？' },
         ],
       };
     }
     // 第1幕
-    if (!ctx.flags.seenMirror && !ctx.flags.foundBgm) {
-      return {
-        msgs: [
-          { delay: 700, text: 'ありがと' },
-          { delay: 2200, text: 'なんかヒントほしいなぁ' },
-          { delay: 2400, text: 'とりあえずあちこち見てみる？' },
-        ],
-      };
-    }
-    if (ctx.flags.alphaPlayed && ctx.stage !== 'back_room') {
-      return {
-        msgs: [
-          { delay: 700, text: 'うん、奥のドア開いてる' },
-          { delay: 2200, text: '入っちゃう？' },
-        ],
-      };
-    }
     return {
       msgs: [
-        { delay: 700, text: 'うん、続けよ' },
-        { delay: 2000, text: '何か気になるとこある？' },
+        { delay: 700, text: 'うん' },
+        { delay: 1800, text: 'どうすればいい？' },
       ],
     };
   },
   disagree: () => ({
     msgs: [
       { delay: 700, text: 'そっか' },
-      { delay: 2000, text: 'でも一緒に考えてくれるだけで助かる' },
-      { delay: 2400, text: 'まず何できるか、整理しよっか' },
+      { delay: 1800, text: 'えっと、じゃあ、どうしよう' },
     ],
   }),
-  hint_request: (ctx) => {
-    // 進行度に応じてヒントを出す
-    if (ctx.stage === 'back_room') {
-      if (!ctx.flags.tookGuitar) {
-        return {
-          msgs: [
-            { delay: 700, text: 'えーっと' },
-            { delay: 2200, text: 'ここ奥の部屋。ギター立てかけてあるよ' },
-            { delay: 2400, text: '取ってみる？' },
-          ],
-        };
-      }
-      if (!ctx.flags.lightOn) {
-        return {
-          msgs: [
-            { delay: 700, text: 'うーん' },
-            { delay: 2200, text: 'ここ、暗くて見にくいんだよね' },
-            { delay: 2400, text: 'スマホのライトつけられる？' },
-          ],
-        };
-      }
-      if (!ctx.flags.readMemo) {
-        return {
-          msgs: [
-            { delay: 700, text: '床、もう一回見てみる？' },
-            { delay: 2200, text: '何か紙が落ちてる気がするんだよね' },
-          ],
-        };
-      }
-      if (!ctx.flags.tunedGuitar) {
-        return {
-          msgs: [
-            { delay: 700, text: '篠田、チューニング担当だったらしい' },
-            { delay: 2200, text: 'チューナーは「A=440Hz」で固まってた' },
-            { delay: 2400, text: 'ギター合わせてみる？' },
-          ],
-        };
-      }
-      return {
-        msgs: [
-          { delay: 700, text: 'チューニングできた' },
-          { delay: 2200, text: '何かコード弾いてみる？' },
-        ],
-      };
-    }
-    // 第1幕
-    if (!ctx.flags.seenPhoto) {
-      return {
-        msgs: [
-          { delay: 700, text: 'まず店内見てみよっか' },
-          { delay: 2200, text: '「写真」って言ってくれれば送るよ' },
-        ],
-      };
-    }
-    if (!ctx.flags.seenMirror) {
-      return {
-        msgs: [
-          { delay: 700, text: 'えーっと' },
-          { delay: 2200, text: '上下左右、見回してみる？' },
-          { delay: 2400, text: '左に古い鏡あるよ' },
-        ],
-      };
-    }
-    if (!ctx.flags.breathedOnMirror && ctx.flags.seenMirror) {
-      return {
-        msgs: [
-          { delay: 700, text: '鏡、薄っすら文字浮かんでる' },
-          { delay: 2400, text: 'もっとはっきり見るには…息かける？' },
-        ],
-      };
-    }
-    if (!ctx.flags.foundBgm) {
-      return {
-        msgs: [
-          { delay: 700, text: '210と220Hzを合わせる、って書いてあった' },
-          { delay: 2400, text: '音を流す装置、ないかな' },
-          { delay: 2400, text: 'カウンターの下、探してみる？' },
-        ],
-      };
-    }
-    if (!ctx.flags.bgmPowered) {
-      return {
-        msgs: [
-          { delay: 700, text: 'BGM装置あった' },
-          { delay: 2400, text: '電源、入れる？' },
-        ],
-      };
-    }
-    if (!ctx.flags.alphaPlayed) {
-      return {
-        msgs: [
-          { delay: 700, text: 'プリセット選べる' },
-          { delay: 2400, text: 'レシートの数字と合うやつ選んでみよう' },
-          { delay: 2400, text: '多分3番のDeep Sleepかな' },
-        ],
-      };
-    }
-    return {
-      msgs: [
-        { delay: 700, text: '奥のドア、開いた' },
-        { delay: 2200, text: '中、入ってみる？' },
-      ],
-    };
-  },
-  // 初期探索
-  photo: (ctx) => ({
+  hint_request: () => ({
     msgs: [
-      { delay: 700, text: 'ちょっと待って' },
-      { delay: 2000, text: '撮った', image: getImageId('A1', ctx.loopCount) },
-      { delay: 1800, text: '今気付いたけど、BGMも止まってる' },
+      { delay: 700, text: 'どうしよう……' },
+      { delay: 1800, text: 'ねえ、何かない？' },
+      { delay: 2200, text: 'どうしたらいい？' },
     ],
-    setFlag: 'seenPhoto',
-  }),
-  selfie: (ctx) => ({
-    msgs: [
-      { delay: 700, text: '自撮り？まあいいけど' },
-      { delay: 2000, text: '', image: getImageId('C2', ctx.loopCount) },
-      { delay: 1500, text: 'こんな感じ' },
-    ],
-    setFlag: 'seenSelfie',
   }),
   compliment: (ctx) => {
     // ツンデレ複数バリエーション
@@ -629,6 +490,23 @@ const ACTIONS = {
     const variant = variants[ctx.tries % variants.length];
     return { msgs: variant };
   },
+  self_intro: () => ({
+    msgs: [
+      { delay: 600, text: '篠崎玲、26歳' },
+      { delay: 2000, text: 'フリーのグラフィックデザイナー' },
+      { delay: 2200, text: '今、コインランドリーで閉じ込められてる' },
+      { delay: 2400, text: '君は？……ううん、それより助けて' },
+    ],
+  }),
+  capabilities: () => ({
+    msgs: [
+      { delay: 700, text: 'スマホはある' },
+      { delay: 2000, text: '写真撮って送れる' },
+      { delay: 2200, text: 'ライトもつけられるし' },
+      { delay: 2400, text: 'ポケットに……まあ、色々' },
+      { delay: 2400, text: '何でも頼んで' },
+    ],
+  }),
   clock: () => ({
     msgs: [
       { delay: 700, text: '時計、撮るね' },
