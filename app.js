@@ -1481,7 +1481,6 @@ function YukaiLaundromat() {
 
   // リセット
   const reset = useCallback(() => {
-    setLoopCount((l) => l + 1);
     setMessages([]);
     setStage('intro');
     setFlags({
@@ -1494,6 +1493,7 @@ function YukaiLaundromat() {
     });
     setMachineLayers({ '1': 0, '2': 0, '3': 0 });
     setFoldedMachines(new Set());
+    setLastFocus(null);
     setCrisis(0);
     setBattery(80);
     setGlitchLevel(0);
@@ -1528,7 +1528,6 @@ function YukaiLaundromat() {
           <span className={battery <= 15 ? 'text-red-400' : 'text-gray-400'}>
             🔋{battery}%
           </span>
-          <span className="text-gray-500">L{loopCount}</span>
         </div>
       </div>
 
