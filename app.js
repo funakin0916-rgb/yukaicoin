@@ -45,6 +45,9 @@ const IMAGE_URIS = {
   'A8-Counter-Front': './images/A8-Counter-Front.webp',
   'U1': './images/U1.webp',
   'D1': './images/D1.webp',
+  'M1-1': './images/M1-1.webp',
+  'M2-1': './images/M2-1.webp',
+  'M3-1': './images/M3-1.webp',
   'A8-Terminal': './images/A8-Terminal.webp',
   'A8-Receipt': './images/A8-Receipt.webp',
   // 鏡（2段階）
@@ -687,8 +690,8 @@ const ACTIONS = {
         { delay: 2200, text: '取り出す？' },
       ],
       [
-        { delay: 700, text: '取り出した' },
-        { delay: 2000, text: 'ジャージ、3年A組のゼッケン' },
+        { delay: 700, text: '取り出した', image: 'M1-1' },
+        { delay: 2200, text: 'ジャージ、3年A組のゼッケン' },
         { delay: 2200, text: 'ポケットに何かある' },
       ],
       [
@@ -714,8 +717,8 @@ const ACTIONS = {
         { delay: 2200, text: '取り出す？' },
       ],
       [
-        { delay: 700, text: '取り出した' },
-        { delay: 2000, text: 'ヨガウェア、ラベンダーの香り' },
+        { delay: 700, text: '取り出した', image: 'M2-1' },
+        { delay: 2200, text: 'ヨガウェア、ラベンダーの香り' },
         { delay: 2200, text: 'ポケットに何か' },
       ],
       [
@@ -741,8 +744,8 @@ const ACTIONS = {
         { delay: 2200, text: '取り出す？' },
       ],
       [
-        { delay: 700, text: '取り出した' },
-        { delay: 2000, text: 'スーツのジャケット' },
+        { delay: 700, text: '取り出した', image: 'M3-1' },
+        { delay: 2200, text: 'スーツのジャケット' },
         { delay: 2200, text: '内ポケットに名刺' },
       ],
       [
@@ -1014,29 +1017,26 @@ const ACTIONS = {
   die_bgm_1: () => ({
     msgs: [
       { delay: 700, text: '1番、Morning Healing' },
-      { delay: 2200, text: '432Hz……' },
-      { delay: 2400, text: '頭が、割れる' },
-      { delay: 2400, text: 'ｲﾔ ｲﾔ ｲﾔﾀﾞ', isGlitch: true },
+      { delay: 2200, text: '432Hz、明るい音' },
+      { delay: 2400, text: '……何も起きない' },
+      { delay: 2200, text: 'これじゃないかも' },
     ],
-    triggerStage: 'end_bad_a',
   }),
   die_bgm_2: () => ({
     msgs: [
       { delay: 700, text: '2番、Relaxation' },
-      { delay: 2200, text: '528Hz……ピアノの音' },
-      { delay: 2400, text: '違う、これじゃない' },
-      { delay: 2400, text: 'ｱｱｱｱｱｱｱ', isGlitch: true },
+      { delay: 2200, text: '528Hz、ピアノの音' },
+      { delay: 2400, text: '……変化ない' },
+      { delay: 2200, text: 'これも違う' },
     ],
-    triggerStage: 'end_bad_a',
   }),
   die_bgm_4: () => ({
     msgs: [
       { delay: 700, text: '4番、Focus Boost' },
-      { delay: 2200, text: '680Hz……高い音' },
-      { delay: 2400, text: '耳が、痛い' },
-      { delay: 2400, text: 'ｺﾅｲﾃﾞ──', isGlitch: true },
+      { delay: 2200, text: '680Hz、高い音' },
+      { delay: 2400, text: '耳が痛い、これ違う' },
+      { delay: 2200, text: '止めた' },
     ],
-    triggerStage: 'end_bad_a',
   }),
   die_wrong_chord: () => ({
     msgs: [
@@ -1164,7 +1164,7 @@ const TIMEOUT_WARNINGS = {
   back_panic: [ // 第2幕 4:00
     { delay: 1000, text: '君、また?' },
     { delay: 2200, text: '死にたくない、絶対' },
-    { delay: 2400, text: 'ｱﾙﾌｧﾉｰﾄ ﾉ ﾋﾄｼﾞｬﾅｲ?', isGlitch: true },
+    { delay: 2400, text: 'ｺﾞﾒﾝ ｵﾈｶﾞｲ ｲﾔﾀﾞ', isGlitch: true },
   ],
   back_collapse: [ // 第2幕 4:30
     { delay: 1000, text: 'ｲﾔﾀﾞ ｲﾔﾀﾞ ﾓｳ ｲﾔﾀﾞ', isGlitch: true },
