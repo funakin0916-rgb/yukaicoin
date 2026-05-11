@@ -730,11 +730,17 @@ const ACTIONS = {
       ? [
           { delay: 700, text: '右、ギターケース' },
         ]
-      : [
-          { delay: 700, text: '右、洗濯機' },
-          { delay: 1800, text: 'どれ見る？' },
-        ],
-    setFocus: ctx.stage !== 'back_room' ? 'machines_question' : null,
+      : ctx.flags.alphaPlayed
+        ? [
+            { delay: 700, text: '右、ドア開いてる', image: 'A9-Door-Open' },
+          ]
+        : [
+            { delay: 700, text: '右、奥のドア' },
+            { delay: 2000, text: '暗証パネル、赤いランプ' },
+            { delay: 2200, text: '今は開かない' },
+          ],
+    setFlag: ctx.stage !== 'back_room' ? 'checkedDoor' : null,
+    setFocus: ctx.stage !== 'back_room' ? 'door' : null,
   }),
   // 機械
   machines_ask: () => ({
