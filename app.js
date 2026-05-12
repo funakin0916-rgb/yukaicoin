@@ -162,7 +162,7 @@ const DICTIONARY = {
   // ========================================
   'play_a_chord': {
     priority: 95,
-    keywords: ['Aコード弾', 'Aを弾', 'A コード', 'A弾', 'aコード弾', 'a弾', 'a コード', 'Aコード鳴', 'A鳴', 'Aコード演奏', 'A演奏', 'ラを弾', 'ラの音', 'ら弾', '440Hz弾', '440 弾', 'ラの音弾', 'Aを鳴ら', 'ラ弾', 'A鳴らし', 'A音'],
+    keywords: ['Aコード弾', 'Aを弾', 'A コード', 'A弾', 'aコード弾', 'a弾', 'a コード', 'Aコード鳴', 'A鳴', 'Aコード演奏', 'A演奏', 'ラを弾', 'ラの音', 'ら弾', '440Hz弾', '440 弾', 'ラの音弾', 'Aを鳴ら', 'ラ弾', 'A鳴らし', 'A音', 'ギター弾', 'ギター鳴', 'ギター演奏', '弾く', '弾いて', 'ひいて', '鳴らす', '鳴らして', 'ならして', 'コード弾', 'コード鳴', '演奏'],
     response: 'play_a_chord',
   },
   'tune_guitar': {
@@ -1074,13 +1074,20 @@ const ACTIONS = {
           { delay: 2400, text: '私、出られる気がする' },
           { delay: 2400, text: '……ありがとう' },
         ]
-      : ctx.flags.tookGuitar
-      ? [
-          { delay: 700, text: 'チューニングしてないのに弾けない' },
-          { delay: 2200, text: '音が割れる、おかしい' },
-        ]
-      : [{ delay: 700, text: 'まずギター取って、合わせないと' }],
-    triggerStage: ctx.flags.tunedGuitar ? 'end_true' : null,
+      : [
+          // チューニングせずに弾く = 即死
+          { delay: 700, text: 'ジャラン、弾いた' },
+          { delay: 2400, text: '音が、ズレてる' },
+          { delay: 2400, text: '──' },
+          // 怪異②篠田からのメッセージ
+          { delay: 3500, text: 'ｺ', isGlitch: true, isGhost: true },
+          { delay: 3000, text: 'ｺ ﾚ', isGlitch: true, isGhost: true },
+          { delay: 3000, text: 'ｺ ﾚ ｼﾞ ｬ', isGlitch: true, isGhost: true },
+          { delay: 3000, text: 'ｺ ﾚ ｼﾞ ｬ ﾅ ｲ', isGlitch: true, isGhost: true },
+          { delay: 3500, text: '誰、近くにいる', isGlitch: true },
+          { delay: 2400, text: 'あ──', isGlitch: true, isFading: true },
+        ],
+    triggerStage: ctx.flags.tunedGuitar ? 'end_true' : 'end_bad_b',
   }),
   // 即死パターン
   die_terminal_1: () => ({
