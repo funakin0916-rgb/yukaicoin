@@ -49,11 +49,8 @@ const IMAGE_URIS = {
   'M2-1': './images/M2-1.webp',
   'M3-1': './images/M3-1.webp',
   'U2': './images/U2.webp',
-  'U2-Dark': './images/U2-Dark.webp',
   'L2': './images/L2.webp',
-  'L2-Dark': './images/L2-Dark.webp',
   'R2': './images/R2.webp',
-  'R2-Dark': './images/R2-Dark.webp',
   'A8-Terminal': './images/A8-Terminal.webp',
   'A8-Receipt': './images/A8-Receipt.webp',
   // 鏡（2段階）
@@ -623,9 +620,8 @@ const ACTIONS = {
               { delay: 2400, text: '軽音部の集合写真' },
             ]
           : [
-              { delay: 800, text: '天井、撮るね' },
-              { delay: 2000, text: '', image: 'U2-Dark' },
-              { delay: 2200, text: '暗くて何があるか分からない' },
+              { delay: 800, text: '上、見上げた' },
+              { delay: 2000, text: '真っ暗、何も見えない' },
             ])
       : [
           { delay: 800, text: '上、撮るね' },
@@ -640,8 +636,8 @@ const ACTIONS = {
                 { delay: 700, text: '床、紙がある', image: 'D2' },
               ]
             : [
-                { delay: 700, text: '床、何かある', image: 'D2-Dark' },
-                { delay: 2200, text: '暗い' },
+                { delay: 700, text: '下、見下ろした' },
+                { delay: 2000, text: '真っ暗、何も見えない' },
               ])
         : [
             { delay: 800, text: '下、撮るね' },
@@ -662,9 +658,8 @@ const ACTIONS = {
               { delay: 2400, text: 'コード表、走り書き' },
             ]
           : [
-              { delay: 700, text: '左、撮るね' },
-              { delay: 2000, text: '', image: 'L2-Dark' },
-              { delay: 2200, text: '暗くて見えない' },
+              { delay: 700, text: '左、見た' },
+              { delay: 2000, text: '真っ暗、何も見えない' },
             ])
       : [
           { delay: 700, text: '左、撮るね' },
@@ -682,9 +677,8 @@ const ACTIONS = {
               { delay: 2400, text: '空のギターケース' },
             ]
           : [
-              { delay: 700, text: '右、撮るね' },
-              { delay: 2000, text: '', image: 'R2-Dark' },
-              { delay: 2200, text: '暗くて見えない' },
+              { delay: 700, text: '右、見た' },
+              { delay: 2000, text: '真っ暗、何も見えない' },
             ])
       : ctx.flags.alphaPlayed
         ? [
@@ -1009,9 +1003,8 @@ const ACTIONS = {
     msgs: ctx.flags.alphaPlayed
       ? [
           { delay: 700, text: '中に入る' },
-          { delay: 2400, text: '空気が変わった', image: 'E1' },
-          { delay: 2400, text: '古い倉庫みたい、ギターが立てかけてある' },
-          { delay: 2400, text: '床に紙くずが散らばってる' },
+          { delay: 2400, text: '真っ暗、何も見えない', image: 'E1' },
+          { delay: 2400, text: 'ギターが床に立てかけてあるのだけ、ぼんやり見える' },
         ]
       : [
           { delay: 700, text: 'ドアが開いてない、まだ入れない' },
