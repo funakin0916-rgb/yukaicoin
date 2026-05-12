@@ -49,8 +49,11 @@ const IMAGE_URIS = {
   'M2-1': './images/M2-1.webp',
   'M3-1': './images/M3-1.webp',
   'U2': './images/U2.webp',
+  'U2-Dark': './images/U2-Dark.webp',
   'L2': './images/L2.webp',
+  'L2-Dark': './images/L2-Dark.webp',
   'R2': './images/R2.webp',
+  'R2-Dark': './images/R2-Dark.webp',
   'A8-Terminal': './images/A8-Terminal.webp',
   'A8-Receipt': './images/A8-Receipt.webp',
   // 鏡（2段階）
@@ -613,11 +616,17 @@ const ACTIONS = {
   // 上下左右
   look_up: (ctx) => ({
     msgs: ctx.stage === 'back_room'
-      ? [
-          { delay: 800, text: '天井、撮るね' },
-          { delay: 2000, text: '', image: 'U2' },
-          { delay: 2400, text: '軽音部の集合写真、貼ってある' },
-        ]
+      ? (ctx.flags.lightOn
+          ? [
+              { delay: 800, text: '天井、撮るね' },
+              { delay: 2000, text: '', image: 'U2' },
+              { delay: 2400, text: '軽音部の集合写真' },
+            ]
+          : [
+              { delay: 800, text: '天井、撮るね' },
+              { delay: 2000, text: '', image: 'U2-Dark' },
+              { delay: 2200, text: '暗くて何があるか分からない' },
+            ])
       : [
           { delay: 800, text: '上、撮るね' },
           { delay: 2000, text: '', image: 'U1' },
@@ -646,11 +655,17 @@ const ACTIONS = {
   },
   look_left: (ctx) => ({
     msgs: ctx.stage === 'back_room'
-      ? [
-          { delay: 700, text: '左、撮るね' },
-          { delay: 2000, text: '', image: 'L2' },
-          { delay: 2400, text: 'コード表、走り書き' },
-        ]
+      ? (ctx.flags.lightOn
+          ? [
+              { delay: 700, text: '左、撮るね' },
+              { delay: 2000, text: '', image: 'L2' },
+              { delay: 2400, text: 'コード表、走り書き' },
+            ]
+          : [
+              { delay: 700, text: '左、撮るね' },
+              { delay: 2000, text: '', image: 'L2-Dark' },
+              { delay: 2200, text: '暗くて見えない' },
+            ])
       : [
           { delay: 700, text: '左、撮るね' },
           { delay: 2000, text: '', image: 'L1-1' },
@@ -660,11 +675,17 @@ const ACTIONS = {
   }),
   look_right: (ctx) => ({
     msgs: ctx.stage === 'back_room'
-      ? [
-          { delay: 700, text: '右、撮るね' },
-          { delay: 2000, text: '', image: 'R2' },
-          { delay: 2400, text: '空のギターケース' },
-        ]
+      ? (ctx.flags.lightOn
+          ? [
+              { delay: 700, text: '右、撮るね' },
+              { delay: 2000, text: '', image: 'R2' },
+              { delay: 2400, text: '空のギターケース' },
+            ]
+          : [
+              { delay: 700, text: '右、撮るね' },
+              { delay: 2000, text: '', image: 'R2-Dark' },
+              { delay: 2200, text: '暗くて見えない' },
+            ])
       : ctx.flags.alphaPlayed
         ? [
             { delay: 700, text: '右、ドア開いてる', image: 'A9-Door-Open' },
