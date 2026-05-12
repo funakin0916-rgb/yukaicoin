@@ -703,25 +703,25 @@ const ACTIONS = {
   // 数字選択（文脈で何を選んでるか判定）
   // 即死扱いは「今まさにそのメニューを見ている時」に限定
   pick_1: (ctx) => {
-    // 機械を見てる時は絶対に機械（BGM/terminal判定しない）
-    if (ctx.lastFocus === 'machine_1' || ctx.lastFocus === 'machine_2' || ctx.lastFocus === 'machine_3') {
+    // 機械を見てる時 or 洗濯機選択待ちは絶対に機械（BGM/terminal判定しない）
+    const machineContext = ['machine_1', 'machine_2', 'machine_3', 'machines_question'].includes(ctx.lastFocus);
+    if (machineContext) {
       const m1 = ACTIONS.machine_1(ctx);
       return { ...m1, msgs: [{ delay: 600, text: '1番ね' }, ...m1.msgs] };
     }
-    // BGMプリセット選択中（lastFocus が bgm_menu の時だけ）
+    // BGMプリセット選択中
     if (ctx.lastFocus === 'bgm_menu' && !ctx.flags.alphaPlayed) {
       return ACTIONS.die_bgm_1(ctx);
     }
-    // 決済端末選択中
     if (ctx.lastFocus === 'terminal') {
       return ACTIONS.die_terminal_1(ctx);
     }
-    // それ以外は機械選択（先に「1番ね」と返事）
     const m1 = ACTIONS.machine_1(ctx);
     return { ...m1, msgs: [{ delay: 600, text: '1番ね' }, ...m1.msgs] };
   },
   pick_2: (ctx) => {
-    if (ctx.lastFocus === 'machine_1' || ctx.lastFocus === 'machine_2' || ctx.lastFocus === 'machine_3') {
+    const machineContext = ['machine_1', 'machine_2', 'machine_3', 'machines_question'].includes(ctx.lastFocus);
+    if (machineContext) {
       const m2 = ACTIONS.machine_2(ctx);
       return { ...m2, msgs: [{ delay: 600, text: '2番ね' }, ...m2.msgs] };
     }
@@ -735,7 +735,8 @@ const ACTIONS = {
     return { ...m2, msgs: [{ delay: 600, text: '2番ね' }, ...m2.msgs] };
   },
   pick_3: (ctx) => {
-    if (ctx.lastFocus === 'machine_1' || ctx.lastFocus === 'machine_2' || ctx.lastFocus === 'machine_3') {
+    const machineContext = ['machine_1', 'machine_2', 'machine_3', 'machines_question'].includes(ctx.lastFocus);
+    if (machineContext) {
       const m3 = ACTIONS.machine_3(ctx);
       return { ...m3, msgs: [{ delay: 600, text: '3番ね' }, ...m3.msgs] };
     }
@@ -775,7 +776,6 @@ const ACTIONS = {
       [
         { delay: 700, text: '取り出した', image: 'M1-1' },
         { delay: 2200, text: 'ジャージ、3年A組のゼッケン' },
-        { delay: 2200, text: 'ポケットに何かある' },
       ],
       [
         { delay: 700, text: 'ポケット探る' },
@@ -783,7 +783,7 @@ const ACTIONS = {
       ],
     ];
     return {
-      msgs: layers[layer] || [{ delay: 700, text: '中身、もう何もない' }],
+      msgs: layers[layer] || [{ delay: 700, text: 'これ以上は何もない' }],
       incrementMachine: '1',
       setFocus: 'machine_1',
     };
@@ -802,15 +802,14 @@ const ACTIONS = {
       [
         { delay: 700, text: '取り出した', image: 'M2-1' },
         { delay: 2200, text: 'ヨガウェア、ラベンダーの香り' },
-        { delay: 2200, text: 'ポケットに何か' },
       ],
       [
-        { delay: 700, text: 'しおり、出てきた' },
+        { delay: 700, text: '一緒に紙、ぐっしょり濡れてる' },
         { delay: 2200, text: '', image: 'B2-3' },
       ],
     ];
     return {
-      msgs: layers[layer] || [{ delay: 700, text: '中身、もう何もない' }],
+      msgs: layers[layer] || [{ delay: 700, text: 'これ以上は何もない' }],
       incrementMachine: '2',
       setFocus: 'machine_2',
     };
@@ -829,15 +828,15 @@ const ACTIONS = {
       [
         { delay: 700, text: '取り出した', image: 'M3-1' },
         { delay: 2200, text: 'スーツのジャケット' },
-        { delay: 2200, text: '内ポケットに名刺' },
       ],
       [
-        { delay: 700, text: '名刺の裏', image: 'B3-3-α' },
-        { delay: 2400, text: '滲んでて読めない' },
+        { delay: 700, text: '内ポケット、名刺入れ' },
+        { delay: 2200, text: '一緒に洗っちゃったみたい' },
+        { delay: 2200, text: '名刺', image: 'B3-3-α' },
       ],
     ];
     return {
-      msgs: layers[layer] || [{ delay: 700, text: '中身、もう何もない' }],
+      msgs: layers[layer] || [{ delay: 700, text: 'これ以上は何もない' }],
       incrementMachine: '3',
       setFocus: 'machine_3',
     };
@@ -1211,10 +1210,16 @@ const ACTIONS = {
   },
   die_break_mirror: () => ({
     msgs: [
-      { delay: 700, text: '鏡を割る' },
-      { delay: 2400, text: '破片、落ちた' },
-      { delay: 2400, text: 'そして……', isGlitch: true },
-      { delay: 2400, text: '中から', isGlitch: true },
+      { delay: 700, text: '鏡を割った' },
+      { delay: 2400, text: '破片、床に' },
+      { delay: 2400, text: '……', isGlitch: true },
+      // 怪異①からのメッセージ（鏡の中から）
+      { delay: 3500, text: 'ﾐ', isGlitch: true, isGhost: true },
+      { delay: 3000, text: 'ﾐ ﾗ', isGlitch: true, isGhost: true },
+      { delay: 3000, text: 'ﾐ ﾗ ｾ', isGlitch: true, isGhost: true },
+      { delay: 3000, text: 'ﾐ ﾗ ｾ ﾅ ｲ ﾃﾞ', isGlitch: true, isGhost: true },
+      { delay: 3500, text: '破片から手が', isGlitch: true },
+      { delay: 2400, text: 'あ──', isGlitch: true, isFading: true },
     ],
     triggerStage: 'end_bad_b',
   }),
@@ -1222,7 +1227,14 @@ const ACTIONS = {
     msgs: [
       { delay: 700, text: '叫んだ' },
       { delay: 2400, text: '声が、響いた' },
-      { delay: 2400, text: '何かに、聞かれた', isGlitch: true },
+      { delay: 2400, text: '……', isGlitch: true },
+      // 怪異①が呼ばれて起きてしまう
+      { delay: 3500, text: 'ｺ', isGlitch: true, isGhost: true },
+      { delay: 3000, text: 'ｺ ｺ', isGlitch: true, isGhost: true },
+      { delay: 3000, text: 'ｺ ｺ ｲ', isGlitch: true, isGhost: true },
+      { delay: 3000, text: 'ｺ ｺ ｲ ﾙ ﾖ', isGlitch: true, isGhost: true },
+      { delay: 3500, text: '聞かれた、絶対' },
+      { delay: 2400, text: 'あ──', isGlitch: true, isFading: true },
     ],
     triggerStage: 'end_bad_b',
   }),
@@ -1230,7 +1242,14 @@ const ACTIONS = {
     msgs: [
       { delay: 700, text: 'ブレーカー、落とした' },
       { delay: 2400, text: '真っ暗' },
-      { delay: 2400, text: '見えない……何かが、近い', isGlitch: true },
+      { delay: 2400, text: '……', isGlitch: true },
+      // 怪異①が暗闇で活性化
+      { delay: 3500, text: 'ｱ', isGlitch: true, isGhost: true },
+      { delay: 3000, text: 'ｱ ﾝ', isGlitch: true, isGhost: true },
+      { delay: 3000, text: 'ｱ ﾝ ｸﾞ ﾗ', isGlitch: true, isGhost: true },
+      { delay: 3000, text: 'ｱ ﾝ ｸﾞ ﾗ ｲ ｱ ﾘ ｶﾞ ﾄ', isGlitch: true, isGhost: true },
+      { delay: 3500, text: '見えない、何か、近い', isGlitch: true },
+      { delay: 2400, text: 'あ──', isGlitch: true, isFading: true },
     ],
     triggerStage: 'end_bad_b',
   }),
