@@ -248,7 +248,7 @@ const DICTIONARY = {
   },
   'counter_under': {
     priority: 75,
-    keywords: ['カウンター下', 'カウンターの下', 'カウンター裏', 'カウンターのした', '受付下', '受付の下', 'カウンター内', 'カウンター中', 'カウンター内部', 'カウンター覗', '受付覗'],
+    keywords: ['カウンター下', 'カウンターの下', 'カウンター裏', 'カウンターのした', '受付下', '受付の下', 'カウンター内', 'カウンター中', 'カウンター内部', 'カウンター覗', '受付覗', 'カウンターの中', 'BGM装置', 'BGMサーバー', 'BGMサーバ', 'サーバー', 'サーバ', 'BGM見', 'BGM確認', 'BGM探'],
     response: 'counter_under',
   },
   'counter_general': {
@@ -954,7 +954,8 @@ const ACTIONS = {
           { delay: 2200, text: '', image: 'A8-Counter-Menu' },
         ]
       : [
-          { delay: 700, text: 'え、何の？' },
+          { delay: 700, text: '電源？何の' },
+          { delay: 2200, text: 'まず装置がどこにあるか見つけないと' },
         ],
     setFlag: 'bgmPowered',
     setFocus: 'bgm_menu',
