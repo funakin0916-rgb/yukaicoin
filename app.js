@@ -132,7 +132,7 @@ const DICTIONARY = {
   },
   'die_breaker': {
     priority: 100,
-    keywords: ['ブレーカー', 'breaker', '電源切', '電源落', '消灯', '電気消', '電気切', 'ブレーカー落', '停電'],
+    keywords: ['ブレーカー', 'breaker', 'ブレーカー落', '停電', '電源全部切', '電源全部落', '電気全部切', '電気全部消'],
     response: 'die_breaker',
   },
   
@@ -218,8 +218,8 @@ const DICTIONARY = {
     response: 'die_bgm_4',
   },
   'bgm_power': {
-    priority: 80,
-    keywords: ['電源入', '電源つけ', '電源オン', '電源ON', 'スイッチ入', 'スイッチオン', '起動', 'BGM起動', 'BGM電源', '装置電源', '装置起動', '装置つけ', 'パワー', 'power on', 'PowerON'],
+    priority: 85,
+    keywords: ['電源入', '電源つけ', '電源オン', '電源ON', '電源', 'スイッチ入', 'スイッチオン', 'スイッチ', '起動', 'BGM起動', 'BGM電源', '装置電源', '装置起動', '装置つけ', 'パワー', 'power on', 'PowerON', 'オン', 'on', 'ON', 'つける', '点ける', 'つけて', 'ボタン', '押す', '押して', 'スタート', 'start'],
     response: 'bgm_power',
   },
   
