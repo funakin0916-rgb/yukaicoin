@@ -51,6 +51,8 @@ const IMAGE_URIS = {
   'U2': './images/U2.webp',
   'L2': './images/L2.webp',
   'R2': './images/R2.webp',
+  'F1': './images/F1.webp',
+  'F2': './images/F2.webp',
   'A8-Terminal': './images/A8-Terminal.webp',
   'A8-Receipt': './images/A8-Receipt.webp',
   // 鏡（2段階）
@@ -262,6 +264,16 @@ const DICTIONARY = {
     priority: 70,
     keywords: ['奥のドア開', 'スタッフドア開', 'スタッフルーム', 'バックヤード', '奥のドア', '奥ドア', 'staff', 'STAFF', '関係者ドア', '関係者用', '裏のドア開', 'ドア開け'],
     response: 'open_door',
+  },
+  'lost_and_found': {
+    priority: 75,
+    keywords: ['忘れ物', '忘れもの', '忘れ', '棚', '木の棚', 'ラック', 'カゴ', '棚見', '棚撮', '隅の棚', '左の棚', '小物', '物入れ', '置き場'],
+    response: 'lost_and_found',
+  },
+  'diary': {
+    priority: 80,
+    keywords: ['日誌', '業務日誌', '手帳', 'ノート', 'ノートブック', '店長の日誌', '店長日誌', '店長の手帳', '日記', '日誌見', '日誌読', 'ノート見', 'ノート読', '手帳見', '手帳読'],
+    response: 'diary',
   },
   'go_back_room': {
     priority: 70,
@@ -685,12 +697,13 @@ const ACTIONS = {
             { delay: 700, text: '右、ドア開いてる', image: 'A9-Door-Open' },
           ]
         : [
-            { delay: 700, text: '右、奥のドア' },
-            { delay: 2000, text: '暗証パネル、赤いランプ' },
-            { delay: 2200, text: '今は開かない' },
+            { delay: 700, text: '右、撮るね' },
+            { delay: 2000, text: '', image: 'F1' },
+            { delay: 2400, text: '奥のドア、それと忘れ物コーナー' },
+            { delay: 2400, text: 'ドアは閉まってる、赤いランプ' },
           ],
     setFlag: ctx.stage !== 'back_room' ? 'checkedDoor' : null,
-    setFocus: ctx.stage !== 'back_room' ? 'door' : null,
+    setFocus: ctx.stage !== 'back_room' ? 'door_area' : null,
   }),
   // 機械
   machines_ask: () => ({
@@ -996,6 +1009,29 @@ const ACTIONS = {
           { delay: 2400, text: '何か条件があるはず' },
         ],
     triggerDie: !ctx.flags.alphaPlayed && ctx.flags.checkedDoor && ctx.tries > 2,
+  }),
+  lost_and_found: (ctx) => ({
+    msgs: [
+      { delay: 700, text: '忘れ物コーナーね' },
+      { delay: 2000, text: '', image: 'F1' },
+      { delay: 2400, text: '色々ある、傘、帽子、領収書' },
+      { delay: 2400, text: '真ん中に古い手帳' },
+    ],
+    setFlag: 'seenLostFound',
+    setFocus: 'lost_found',
+  }),
+  diary: (ctx) => ({
+    msgs: ctx.flags.seenLostFound
+      ? [
+          { delay: 700, text: '手帳、開いてみる' },
+          { delay: 2400, text: '', image: 'F2' },
+          { delay: 2400, text: '店長の業務日誌みたい' },
+        ]
+      : [
+          { delay: 700, text: '日誌？どこにあるの' },
+        ],
+    setFlag: 'readDiary',
+    setFocus: 'diary',
   }),
   // 奥の部屋へ移動
   go_back_room: (ctx) => ({
@@ -1415,7 +1451,7 @@ function YukaiLaundromat() {
     seenMirror: false, breathedOnMirror: false,
     seenBoard: false, checkedDoor: false,
     foundBgm: false, bgmPowered: false, alphaPlayed: false,
-    seenTerminal: false, gotReceipt: false,
+    seenTerminal: false, gotReceipt: false, seenLostFound: false, readDiary: false,
     tookGuitar: false, lightOn: false, readMemo: false, tunedGuitar: false,
   });
   const [machineLayers, setMachineLayers] = useState({ '1': 0, '2': 0, '3': 0 });
@@ -1620,7 +1656,7 @@ function YukaiLaundromat() {
       seenMirror: false, breathedOnMirror: false,
       seenBoard: false, checkedDoor: false,
       foundBgm: false, bgmPowered: false, alphaPlayed: false,
-      seenTerminal: false, gotReceipt: false,
+      seenTerminal: false, gotReceipt: false, seenLostFound: false, readDiary: false,
       tookGuitar: false, lightOn: false, readMemo: false, tunedGuitar: false,
     });
     setMachineLayers({ '1': 0, '2': 0, '3': 0 });
